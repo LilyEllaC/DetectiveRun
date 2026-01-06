@@ -34,7 +34,7 @@ class Obstacle(pygame.sprite.Sprite):
         
     def reset(self):
         if self.x<100:
-            self.images=["crow.png"]
+            self.images=["assets/crow.png"]
             imageNum=random.randInt(0, len(self.images))
             self.image=pygame.load.image(self.images[imageNum])
             self.height=self.image.get_height
@@ -45,9 +45,9 @@ class Obstacle(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, width, height, gravity):
         super().__init__()
-        self.walks=["crow.png"]
+        self.walks=["assets/crow.png"]
         self.walkNum=0
-        self.jumps=["crow.png"]
+        self.jumps=["assets/crow.png"]
         self.jumpNum=0
         self.x=x
         self.width=width
