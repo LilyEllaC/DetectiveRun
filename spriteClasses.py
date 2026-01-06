@@ -56,6 +56,7 @@ class Player(pygame.sprite.Sprite):
         self.floor=c.HEIGHT-50
         self.yVelocity=0
         self.jumpPressed=False
+        self.faster=0
 
         image=pygame.image.load(self.walks[self.walkNum])
         self.image=pygame.transform.scale(image, (width, height))
@@ -66,7 +67,7 @@ class Player(pygame.sprite.Sprite):
     def jump(self):
         if self.jumpPressed:
             if self.y<self.floor-self.height:
-                self.yVelocity+=self.gravity
+                self.yVelocity+=self.gravity+self.faster
                 #appearance
                 self.image=pygame.image.load(self.jumps[self.jumpNum])
                 self.jumpNum+=1
