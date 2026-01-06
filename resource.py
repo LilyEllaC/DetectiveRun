@@ -21,6 +21,7 @@ class Resource:
         self.scale = scale
         self.position = position
         self.frameMap = dict()
+        self.alpha = 255
 
         # 2. Build the frame map immediately
         self.buildFrameMap()
@@ -65,7 +66,11 @@ class Resource:
                 image_to_draw = pygame.transform.scale(image_to_draw, (target_width, target_height))
 
             # Draw to screen
+            image_to_draw.set_alpha(self.alpha)
             screen.blit(image_to_draw, (position.x, position.y))
 
         except ValueError:
             print(f"Error: Frame rect {src_rect} is outside image bounds.")
+
+    def setAlpha(self, alpha):
+        self.alpha = alpha

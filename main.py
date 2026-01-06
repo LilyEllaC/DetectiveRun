@@ -1,12 +1,16 @@
-import pygame 
-import constants as c
-import utility
+import time
+
+import pygame
+import constants as const
+import help
 import asyncio
 import intro
 import playing
 import end
 from enum import Enum
 
+import utility
+import vector2
 
 # pylint: disable=no-member
 pygame.init()
@@ -18,6 +22,7 @@ class GameStates(Enum):
     INTRO=1
     PLAYING=2
     END=3
+    HELP=4
 
 async def main():
     global running
@@ -29,8 +34,18 @@ async def main():
                 running = False
             if gameState==GameStates.INTRO:
                 if event.type==pygame.MOUSEBUTTONDOWN:
-                    if intro.startButton.isHovered:
+                    if intro.startButton.isHovered():
                         gameState=GameStates.PLAYING
+                    elif intro.helpButton.isHovered():
+                        await utility.fadeOutResource(intro.bg)
+
+                        gameState = GameStates.HELP
+                        help.showHelp()
+
+                        await utility.fadeInResource(help.bg)
+                    elif intro.exitButton.isHovered():
+                        running=False
+
             if gameState==GameStates.PLAYING:
                 if event.type==pygame.KEYDOWN:
                     if event.key==pygame.K_SPACE and playing.crow.y==playing.crow.floor-playing.crow.height-5:
@@ -53,10 +68,12 @@ async def main():
                 gameState=GameStates.END
         elif gameState==GameStates.END:
             end.endGame()
+        elif gameState==GameStates.HELP:
+            help.showHelp()
 
         #ending stuff
         pygame.display.flip()
-        c.clock.tick(c.FPS)
+        const.clock.tick(const.FPS)
         await asyncio.sleep(0)
 
 
