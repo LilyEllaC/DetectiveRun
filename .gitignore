@@ -1,0 +1,11 @@
+.DS_Store
+
+pyproject.toml
+
+.venv
+
+.idea
+
+__pycache__
+
+build
