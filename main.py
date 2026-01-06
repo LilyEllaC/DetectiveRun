@@ -1,5 +1,5 @@
 import pygame 
-import constants
+import constants as c
 import utility
 import asyncio
 
@@ -19,10 +19,10 @@ async def main():
             if event.type == pygame.QUIT:
                 running = False
 
-
+        c.screen.fill(c.BLACK)
         #ending stuff
         pygame.display.flip()
-        constants.clock.tick(constants.FPS)
+        c.clock.tick(c.FPS)
         await asyncio.sleep(0)
 
 

@@ -2,7 +2,7 @@ import pygame
 # pylint: disable=no-member
 pygame.init()
 
-WIDTH, HEIGHT = 900, 600
+WIDTH, HEIGHT = 900, 400
 FPS = 30
 FPS_SCALING = 30 / FPS
 
