@@ -42,11 +42,15 @@ async def main():
                     if event.key==pygame.K_DOWN:
                         playing.crow.faster=0
 
+        
 
         if gameState==GameStates.INTRO:
             intro.showIntro()
         elif gameState==GameStates.PLAYING:
             playing.playGame()
+            #ending the gameplay
+            if playing.crow.hasCollided(playing.obstacles):
+                gameState=GameStates.END
         elif gameState==GameStates.END:
             end.endGame()
 

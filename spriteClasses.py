@@ -6,40 +6,46 @@ import utility
 # pylint: disable=no-member
 pygame.init()
 
+MINIMUM=c.HEIGHT-50
+
 #obstancle class
 class Obstacle(pygame.sprite.Sprite):
-    def __init__(self, width, height, velocity):
+    def __init__(self, x, width, height, velocity):
         super().__init__()
-        self.images=["list of images goes here"]
-        imageNum=random.randInt(0, len(self.images))
-        self.x=random.randInt(c.WIDTH, c.WIDTH+100)
-        self.floor=c.HEIGHT-50
+        self.images=["assets/crate.png"]
+        imageNum=random.randint(0, len(self.images)-1)
+        self.x=x
+        self.bottom=MINIMUM
         self.width=width
         self.height=height
         self.velocity=velocity
         #loading the image
         self.image=pygame.image.load(self.images[imageNum])
-        #self.image=pygame.tranform.scale(image, (width, height))
+        self.image=pygame.transform.scale(self.image, (width, height))
         self.rect=self.image.get_rect()
         self.height=self.image.get_height()
-        self.y=self.floor-self.height
+        self.y=self.bottom-self.height
         self.rect.x=self.x
         self.rect.y=self.y
 
         #saving the history for the quizzes
         self.history=[imageNum]
 
-    def move(self):
+    def move(self, velocity):
+        self.velocity=velocity
         self.x+=self.velocity
+        self.rect.x=self.x
+        self.rect.y=self.y
         
     def reset(self):
-        if self.x<100:
-            self.images=["assets/crow.png"]
-            imageNum=random.randInt(0, len(self.images))
-            self.image=pygame.load.image(self.images[imageNum])
-            self.height=self.image.get_height
-            self.x=random.randInt(c.WIDTH, c.WIDTH+100)
-            self.y=self.floor-self.height
+        if self.x<-self.width:
+            self.images=["assets/crate.png"]
+            imageNum=random.randint(0, len(self.images)-1)
+            self.image=pygame.image.load(self.images[imageNum])
+            self.image=pygame.transform.scale(self.image, (self.width, self.height))
+            self.height=self.image.get_height()
+            self.x=random.randint(c.WIDTH, c.WIDTH+100)
+            self.y=self.bottom-self.height
             self.history.append(imageNum)
 
 class Player(pygame.sprite.Sprite):
@@ -53,7 +59,7 @@ class Player(pygame.sprite.Sprite):
         self.width=width
         self.height=height
         self.gravity=gravity
-        self.floor=c.HEIGHT-50
+        self.floor=MINIMUM
         self.yVelocity=0
         self.jumpPressed=False
         self.faster=0
@@ -91,9 +97,8 @@ class Player(pygame.sprite.Sprite):
         self.image=pygame.transform.scale(self.image, (self.width, self.height))
 
     def hasCollided(self, obstacles):
-        playerRect=self.image.get_rect()
         for obstacle in obstacles:
-            if playerRect.colliderect(obstacle.rect):
+            if self.rect.colliderect(obstacle.rect):
                 return True
         return False
 
