@@ -2,6 +2,11 @@ import pygame
 import constants as c
 import utility
 import asyncio
+import intro
+import playing
+import end
+from enum import Enum
+
 
 # pylint: disable=no-member
 pygame.init()
@@ -9,17 +14,34 @@ pygame.init()
 #running
 running=True
 
-
+class GameStates(Enum):
+    INTRO=1
+    PLAYING=2
+    END=3
 
 async def main():
     global running
+    gameState=GameStates.PLAYING
 
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if gameState==GameStates.PLAYING:
+                if event.type==pygame.KEYDOWN:
+                    if event.key==pygame.K_SPACE:
+                        playing.crow.jump()
 
-        c.screen.fill(c.BLACK)
+
+        if gameState==GameStates.INTRO:
+            intro.intro()
+        elif gameState==GameStates.PLAYING:
+            playing.playGame()
+        elif gameState==GameStates.END:
+            end.endGame()
+
+
+
         #ending stuff
         pygame.display.flip()
         c.clock.tick(c.FPS)

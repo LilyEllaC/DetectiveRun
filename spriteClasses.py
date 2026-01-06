@@ -1,6 +1,7 @@
 import pygame
 import random
 import constants as c
+import utility
 
 # pylint: disable=no-member
 pygame.init()
@@ -33,7 +34,7 @@ class Obstacle(pygame.sprite.Sprite):
         
     def reset(self):
         if self.x<100:
-            self.images=["list of images goes here"]
+            self.images=["crow.png"]
             imageNum=random.randInt(0, len(self.images))
             self.image=pygame.load.image(self.images[imageNum])
             self.height=self.image.get_height
@@ -44,14 +45,19 @@ class Obstacle(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, gravity):
         super().__init__()
+        self.walks=["crow.png"]
+        self.walkNum=0
+        self.jumps=["crow.png"]
+        self.jumpNum=0
         self.x=x
         self.y=y
         self.width=width
         self.height=height
         self.gravity=gravity
+        self.floor=c.HEIGHT-50
         self.yVelocity=0
 
-        image=pygame.image.load("crow.png")
+        image=pygame.image.load(self.walks[self.walkNum])
         self.image=pygame.transform.scale(image, (width, height))
         self.rect=self.image.get_rect()
         self.rect.x=x
@@ -60,11 +66,28 @@ class Player(pygame.sprite.Sprite):
     def jump(self):
         if self.y<self.floor-self.height:
             self.yVelocity+=self.gravity
+            #appearance
+            self.image=pygame.image.load(self.jumps[self.jumpNum])
+            self.jumpNum+=1
+            if self.jumpNum>len(self.jumps):
+                self.jumpNum=0
         else:
             self.yVelocity=0
-
-    def moving(self):
+            #appearance
+            self.image=pygame.image.load(self.walks[self.walkNum])
+            self.walkNum+=1
+            if self.walkNum>len(self.walks):
+                self.walkNum=0
         self.y+=self.yVelocity
+
+    
+    def draw(self):
+        self.rect.x=self.x
+        self.rect.y=self.y
+        self.image=pygame.transform.scale(self.image, (self.width, self.height))
+
+        
+
 
     def hasCollided(self, obstacles):
         playerRect=self.image.get_rect()
@@ -72,8 +95,46 @@ class Player(pygame.sprite.Sprite):
             if playerRect.colliderect(obstacle.rect):
                 return True
         return False
-    
 
+class Button():
+    def __init__(self, x, y, width, height, text, font, colour1, colour2, hasOutline: bool):
+        self.rect = None
+        self.x = x
+        self.y = y
+
+        self.width = width
+        self.height = height
+
+        self.text = text
+        self.font = font
+
+        self.colours = [colour1, colour2]
+        self.colour = colour1
+        self.textColour = c.WHITE
+
+        self.hasOutline = hasOutline
+
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+
+    def draw(self):
+        pygame.draw.rect(c.screen, self.colour, self.rect)
+
+        if self.hasOutline:
+            pygame.draw.rect(c.screen, c.BLACK, self.rect, 3)
+        if self.isHovered():
+            self.colour=self.colours[1]
+        else:
+            self.colour=self.colours[0]
+        
+        utility.toScreen(self.text, self.font, self.textColour, self.x + self.width // 2, self.y + self.height // 2)
+
+    def isHovered(self):
+        mouseX, mouseY = pygame.mouse.get_pos()
+
+        if self.rect.collidepoint(mouseX, mouseY):
+            return True
+
+        return False
 
 
 
