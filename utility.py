@@ -1,4 +1,8 @@
 import constants
+import pygame
+# pylint: disable=no-member
+pygame.init()
+
 
 # helpful pushing text to screen function
 def toScreen(words, font, colour, x, y):

@@ -1,4 +1,6 @@
 import pygame
+# pylint: disable=no-member
+pygame.init()
 
 WIDTH, HEIGHT = 900, 600
 FPS = 30

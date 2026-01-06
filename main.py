@@ -3,6 +3,9 @@ import constants
 import utility
 import asyncio
 
+# pylint: disable=no-member
+pygame.init()
+
 #running
 running=True
 
