@@ -11,7 +11,7 @@ velocity=-5
 
 #sprites
 crow=Player(150, 100, 100, 1)
-obstacleSize=100
+obstacleSize=50
 obstacle1=Obstacle(c.WIDTH+20, obstacleSize, obstacleSize, velocity)
 obstacle2=Obstacle(c.WIDTH+c.WIDTH//2, obstacleSize, obstacleSize, velocity)
 sprites=pygame.sprite.Group()
