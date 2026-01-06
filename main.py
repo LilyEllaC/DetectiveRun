@@ -27,9 +27,14 @@ async def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if gameState==GameStates.INTRO:
+                if event.type==pygame.MOUSEBUTTONDOWN:
+                    if intro.startButton.isHovered:
+                        gameState=GameStates.PLAYING
             if gameState==GameStates.PLAYING:
                 if event.type==pygame.KEYDOWN:
                     if event.key==pygame.K_SPACE:
+                        playing.crow.yVelocity=10
                         playing.crow.jump()
 
 

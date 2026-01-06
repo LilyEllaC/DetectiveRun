@@ -69,19 +69,19 @@ class Player(pygame.sprite.Sprite):
             #appearance
             self.image=pygame.image.load(self.jumps[self.jumpNum])
             self.jumpNum+=1
-            if self.jumpNum>len(self.jumps):
+            if self.jumpNum>=len(self.jumps):
                 self.jumpNum=0
         else:
             self.yVelocity=0
             #appearance
             self.image=pygame.image.load(self.walks[self.walkNum])
             self.walkNum+=1
-            if self.walkNum>len(self.walks):
+            if self.walkNum>=len(self.walks):
                 self.walkNum=0
         self.y+=self.yVelocity
 
     
-    def draw(self):
+    def move(self):
         self.rect.x=self.x
         self.rect.y=self.y
         self.image=pygame.transform.scale(self.image, (self.width, self.height))

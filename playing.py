@@ -6,9 +6,17 @@ from spriteClasses import Player
 pygame.init()
 
 #crow
-crow=Player(100, c.HEIGHT-50, 100, 100, 1)
+crow=Player(c.WIDTH//2, c.HEIGHT//2, 100, 100, 1)
+sprites=pygame.sprite.Group()
+sprites.add(crow)
 
+
+#playing
 def playGame():
     c.screen.fill(c.ORANGE)
-    crow.draw()
-    print(crow.x, crow.y)
+
+    #moving the crow
+    crow.move()
+
+    #drawing it
+    sprites.draw(c.screen)
