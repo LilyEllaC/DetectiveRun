@@ -6,11 +6,10 @@ from spriteClasses import Player, Obstacle
 pygame.init()
 
 #having the obstacles speed up
-velocity=-5
-
+velocity=-5*c.FPS_SCALING
 
 #sprites
-crow=Player(150, 100, 100, 1)
+crow=Player(150, 100, 100, 1*c.FPS_SCALING)
 obstacleSize=50
 obstacle1=Obstacle(c.WIDTH+20, obstacleSize, obstacleSize, velocity)
 obstacle2=Obstacle(c.WIDTH+c.WIDTH//2, obstacleSize, obstacleSize, velocity)
@@ -34,7 +33,7 @@ def playGame():
     for obstacle in obstacles:
         obstacle.move(velocity)
         obstacle.reset()
-    velocity-=0.01
+    velocity-=0.01*c.FPS_SCALING
     
     #drawing it
     sprites.draw(c.screen)

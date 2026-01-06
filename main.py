@@ -49,10 +49,10 @@ async def main():
             if gameState==GameStates.PLAYING:
                 if event.type==pygame.KEYDOWN:
                     if event.key==pygame.K_SPACE and playing.crow.y==playing.crow.floor-playing.crow.height-5:
-                        playing.crow.yVelocity=-20
+                        playing.crow.yVelocity=-20*c.FPS_SCALING
                         playing.crow.jumpPressed=True
                     if event.key==pygame.K_DOWN:
-                        playing.crow.faster=1
+                        playing.crow.faster=1*c.FPS_SCALING
                 if event.type==pygame.KEYUP:
                     if event.key==pygame.K_DOWN:
                         playing.crow.faster=0
