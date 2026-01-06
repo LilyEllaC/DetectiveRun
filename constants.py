@@ -2,13 +2,13 @@ import pygame
 # pylint: disable=no-member
 pygame.init()
 
-WIDTH, HEIGHT = 900, 400
+WIDTH, HEIGHT = 1200, 800
 FPS = 30
 FPS_SCALING = 30 / FPS
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock=pygame.time.Clock()
-pygame.display.set_caption("Crossword Murder Mystery")
+pygame.display.set_caption("Detective Run")
 
 # colours
 RED = (255, 0, 0)

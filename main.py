@@ -21,7 +21,7 @@ class GameStates(Enum):
 
 async def main():
     global running
-    gameState=GameStates.PLAYING
+    gameState=GameStates.INTRO
 
     while running:
         for event in pygame.event.get():
@@ -34,13 +34,11 @@ async def main():
 
 
         if gameState==GameStates.INTRO:
-            intro.intro()
+            intro.showIntro()
         elif gameState==GameStates.PLAYING:
             playing.playGame()
         elif gameState==GameStates.END:
             end.endGame()
-
-
 
         #ending stuff
         pygame.display.flip()
