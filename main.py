@@ -33,9 +33,9 @@ async def main():
                         gameState=GameStates.PLAYING
             if gameState==GameStates.PLAYING:
                 if event.type==pygame.KEYDOWN:
-                    if event.key==pygame.K_SPACE:
-                        playing.crow.yVelocity=10
-                        playing.crow.jump()
+                    if event.key==pygame.K_SPACE and playing.crow.y==playing.crow.floor-playing.crow.height-5:
+                        playing.crow.yVelocity=-20
+                        playing.crow.jumpPressed=True
 
 
         if gameState==GameStates.INTRO:

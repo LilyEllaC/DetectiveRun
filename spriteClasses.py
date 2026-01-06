@@ -43,51 +43,51 @@ class Obstacle(pygame.sprite.Sprite):
             self.history.append(imageNum)
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y, width, height, gravity):
+    def __init__(self, x, width, height, gravity):
         super().__init__()
         self.walks=["crow.png"]
         self.walkNum=0
         self.jumps=["crow.png"]
         self.jumpNum=0
         self.x=x
-        self.y=y
         self.width=width
         self.height=height
         self.gravity=gravity
         self.floor=c.HEIGHT-50
         self.yVelocity=0
+        self.jumpPressed=False
 
         image=pygame.image.load(self.walks[self.walkNum])
         self.image=pygame.transform.scale(image, (width, height))
         self.rect=self.image.get_rect()
         self.rect.x=x
-        self.rect.y=y
+        self.y=self.floor-self.height-5
     
     def jump(self):
-        if self.y<self.floor-self.height:
-            self.yVelocity+=self.gravity
-            #appearance
-            self.image=pygame.image.load(self.jumps[self.jumpNum])
-            self.jumpNum+=1
-            if self.jumpNum>=len(self.jumps):
-                self.jumpNum=0
-        else:
-            self.yVelocity=0
-            #appearance
-            self.image=pygame.image.load(self.walks[self.walkNum])
-            self.walkNum+=1
-            if self.walkNum>=len(self.walks):
-                self.walkNum=0
-        self.y+=self.yVelocity
-
+        if self.jumpPressed:
+            if self.y<self.floor-self.height:
+                self.yVelocity+=self.gravity
+                #appearance
+                self.image=pygame.image.load(self.jumps[self.jumpNum])
+                self.jumpNum+=1
+                if self.jumpNum>=len(self.jumps):
+                    self.jumpNum=0
+            #jump stopping
+            else:
+                self.yVelocity=0
+                self.y=self.floor-self.height-5
+                #appearance
+                self.image=pygame.image.load(self.walks[self.walkNum])
+                self.walkNum+=1
+                if self.walkNum>=len(self.walks):
+                    self.walkNum=0
+                self.jumpPressed=False
+            self.y+=self.yVelocity
     
     def move(self):
         self.rect.x=self.x
         self.rect.y=self.y
         self.image=pygame.transform.scale(self.image, (self.width, self.height))
-
-        
-
 
     def hasCollided(self, obstacles):
         playerRect=self.image.get_rect()
