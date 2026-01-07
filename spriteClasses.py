@@ -34,7 +34,6 @@ class Obstacle(pygame.sprite.Sprite):
         self.time=0
         self.history=[]
         self.timeForQuestion=random.randint(3,6)
-        print(self.timeForQuestion)
 
     def move(self, velocity, question):
         if not question.existing:
@@ -51,8 +50,6 @@ class Obstacle(pygame.sprite.Sprite):
             # saving the history for the quizzes
             self.history.append(self.imageNum)
             self.timesSinceQuestion+=1
-            print("velocity: ", velocity)
-            print(self.timesSinceQuestion)
 
     def askQuestion(self, question):
         if not question.existing:
@@ -60,7 +57,6 @@ class Obstacle(pygame.sprite.Sprite):
                 self.time+=1/c.FPS
                 if self.time>2:
                     question.existing=True
-
 
     def reset(self):
         self.images = ["assets/crate.png"]
