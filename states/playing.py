@@ -108,14 +108,15 @@ class PlayingState(GameState):
     def update(self, dt):
         # 1. Update Background Offsets
         bg_width = 2304 * 0.65
-        self.groundOffsetBackground += abs(self.velocity) * 0.5
-        if self.groundOffsetBackground >= bg_width:
-            self.groundOffsetBackground -= bg_width
+        if not self.question.existing:
+            self.groundOffsetBackground += abs(self.velocity) * 0.5
+            if self.groundOffsetBackground >= bg_width:
+                self.groundOffsetBackground -= bg_width
 
-        tile_width = 32 * 3
-        self.groundOffset += abs(self.velocity)
-        if self.groundOffset >= tile_width:
-            self.groundOffset -= tile_width
+            tile_width = 32 * 3
+            self.groundOffset += abs(self.velocity)
+            if self.groundOffset >= tile_width:
+                self.groundOffset -= tile_width
 
         # 2. Game Logic
         if not self.question.existing:
