@@ -39,9 +39,9 @@ def reset():
     for obstacle in obstacles:
         obstacle.reset()
         obstacle.history.clear()
-    obstacle2.x += c.WIDTH//2
+    obstacle2.x += c.WIDTH // 2
     crow.points = 0
-    velocity = -5*c.FPS_SCALING
+    velocity = -5 * c.FPS_SCALING
 
 
 # dealing with asking questions
@@ -55,7 +55,7 @@ question = Question(c.WIDTH // 2, c.HEIGHT // 2, 300, 200, history)
 
 
 # playing
-def playGame():
+def render():
     global velocity
     c.screen.fill(c.DARK_GRAY_BLUE)
 

@@ -136,63 +136,58 @@ class Button:
     def __init__(
         self, x, y, width, height, text, font, colour1, colour2, hasOutline: bool
     ):
-        self.rect = None
         self.x = x
         self.y = y
-
         self.width = width
         self.height = height
-
         self.text = text
         self.font = font
-
         self.colours = [colour1, colour2]
         self.colour = colour1
         self.textColour = c.BLACK
-
         self.hasOutline = hasOutline
 
-        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        self.image = pygame.Surface((self.width, self.height))
 
-    def draw(self):
-        pygame.draw.rect(c.screen, self.colour, self.rect)
+        self.image = (
+            self.image.convert_alpha() if pygame.display.get_surface() else self.image
+        )
+
+        self.rect = self.image.get_rect(topleft=(self.x, self.y))
+
+        self.update_image()
+
+    def update_image(self):
+        self.image.fill(self.colour)
 
         if self.hasOutline:
-            pygame.draw.rect(c.screen, c.BLACK, self.rect, 3)
+            pygame.draw.rect(self.image, c.BLACK, (0, 0, self.width, self.height), 3)
+
+        text_surf = self.font.render(self.text, True, self.textColour)
+        text_rect = text_surf.get_rect(center=(self.width // 2, self.height // 2))
+
+        self.image.blit(text_surf, text_rect)
+
+    def draw(self):
+        prev_colour = self.colour
+
         if self.is_hovered():
             self.colour = self.colours[1]
         else:
             self.colour = self.colours[0]
 
-        utility.toScreen(
-            self.text,
-            self.font,
-            self.textColour,
-            self.x + self.width // 2,
-            self.y + self.height // 2,
-        )
+        if prev_colour != self.colour:
+            self.update_image()
+
+        c.screen.blit(self.image, self.rect)
 
     def is_hovered(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
-        if self.rect.collidepoint(mouse_x, mouse_y):
-            return True
-
-        return False
+        return self.rect.collidepoint(mouse_x, mouse_y)
 
     def set_alpha(self, alpha):
-        self.colour = (self.colour[0], self.colour[1], self.colour[2], alpha)
-        self.textColour = (
-            self.textColour[0],
-            self.textColour[1],
-            self.textColour[2],
-            alpha,
-        )
-
-    def draw_image(self, screen, position):
-        # position argument is ignored as Button has its own position,
-        # but kept for compatibility with resources.
-        self.draw()
+        self.image.set_alpha(alpha)
 
 
 class QuestionImage(pygame.sprite.Sprite):

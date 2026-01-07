@@ -54,7 +54,7 @@ crow = resources.Resource(
 crow.animation_cooldown = 100
 
 
-def showIntro():
+def render():
     bg.draw_image(const.screen, vector2.Vector2(0, 0))
 
     utility.toScreen("Detective Run", const.FONT60, const.BLACK, const.WIDTH / 2, 100)

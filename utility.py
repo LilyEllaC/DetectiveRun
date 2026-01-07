@@ -50,6 +50,22 @@ async def fade_to_black():
         await asyncio.sleep(0.005)
 
 
+async def fade_from_black():
+    snapshot = const.screen.copy()
+
+    overlay = pygame.Surface((const.WIDTH, const.HEIGHT))
+    overlay.fill((0, 0, 0))
+
+    for alpha in range(255, -1, -5):
+        const.screen.blit(snapshot, (0, 0))
+
+        overlay.set_alpha(alpha)
+        const.screen.blit(overlay, (0, 0))
+
+        pygame.display.flip()
+        await asyncio.sleep(0.005)
+
+
 async def fadeInResource(resource):
     for i in range(0, 255, 5):
         await fade(resource, i)

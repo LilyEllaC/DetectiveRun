@@ -19,6 +19,7 @@ pygame.init()
 running = True
 game_state = None
 
+
 class GameStates(Enum):
     INTRO = 1
     PLAYING = 2
@@ -34,16 +35,11 @@ async def handle_events(state):
         if state == GameStates.INTRO:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if intro.startButton.is_hovered():
+                    await utility.fade_to_black()
+
                     return GameStates.PLAYING
                 elif intro.helpButton.is_hovered():
-                    await utility.fadeOutResource(intro.bg)
-                    intro.bg.set_alpha(255)
-
-                    help.showHelp()
-
-                    await utility.fadeInResource(help.bg)
-
-                    help.bg.set_alpha(255)
+                    await utility.fade_to_black()
 
                     return GameStates.HELP
                 elif intro.exitButton.is_hovered():
@@ -53,26 +49,17 @@ async def handle_events(state):
 
         if state == GameStates.HELP:
             if event.type == pygame.MOUSEBUTTONDOWN:
-                mouseX, mouseY = pygame.mouse.get_pos()
-
-                if help.backButton.get_rect(topleft=(38, 30)).collidepoint(mouseX, mouseY):
-                    await utility.fadeOutResource(help.bg)
-                    help.bg.set_alpha(255)
-
-                    intro.showIntro()
-
-                    await utility.fadeInResource(intro.bg)
-
-                    intro.bg.set_alpha(255)
+                if help.backButton.is_hovered():
+                    await utility.fade_to_black()
 
                     return GameStates.INTRO
 
         if state == GameStates.PLAYING:
             if event.type == pygame.KEYDOWN:
-                #able to enter an answer
+                # able to enter an answer
                 if playing.question.existing:
                     playing.question.getGuess(event)
-                #moving the crow
+                # moving the crow
                 if (
                     event.key == pygame.K_SPACE
                     # if crow is on the ground
@@ -87,11 +74,13 @@ async def handle_events(state):
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_DOWN:
                     playing.crow.faster = 0
-            #submitting question answer
-            if event.type==pygame.MOUSEBUTTONDOWN:
-                if playing.question.box.is_hovered() and playing.question.checkIfNumber():
-                    playing.question.checkGuess() 
 
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if (
+                    playing.question.box.is_hovered()
+                    and playing.question.checkIfNumber()
+                ):
+                    playing.question.checkGuess()
 
         if state == GameStates.END:
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -111,23 +100,25 @@ async def main():
     while running:
         new_state = await handle_events(game_state)
 
+        rendered = False
+
         if new_state in GameStates:
             game_state = new_state
+
+            rendered = True
+            globals()[game_state.name.lower()].render()
+
+            await utility.fade_from_black()
         elif new_state is None:
             running = False
             break
 
-        if game_state == GameStates.INTRO:
-            intro.showIntro()
-        elif game_state == GameStates.PLAYING:
-            playing.playGame()
+            # if game_state == GameStates.END:
+        if playing.crow.hasCollided(playing.obstacles):
+            game_state = GameStates.END
 
-            if playing.crow.hasCollided(playing.obstacles):
-                game_state = GameStates.END
-        elif game_state == GameStates.END:
-            end.endGame()
-        elif game_state == GameStates.HELP:
-            help.showHelp()
+        if not rendered:
+            globals()[game_state.name.lower()].render()
 
         pygame.display.flip()
         const.clock.tick(const.FPS)

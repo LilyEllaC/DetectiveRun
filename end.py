@@ -7,7 +7,7 @@ from spriteClasses import Button
 pygame.init()
 
 restartButton = Button(
-    const.WIDTH // 2-100,
+    const.WIDTH // 2 - 100,
     const.HEIGHT - 120,
     200,
     100,
@@ -19,7 +19,7 @@ restartButton = Button(
 )
 
 
-def endGame():
+def render():
     const.screen.fill(const.DARK_PURPLE)
     utility.toScreen("You got hit :(", const.FONT40, const.WHITE, const.WIDTH // 2, 100)
 
