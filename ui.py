@@ -4,6 +4,7 @@ import const
 import utility
 import resources
 import vector2
+from states.playing import PlayingState
 
 MINIMUM = const.HEIGHT - 50
 OBSTACLE_IMAGES = ["assets/crate.png"]
@@ -68,7 +69,7 @@ class Question:
             screen, self.guess, const.FONT30, const.BLUE, self.x, self.y - 50
         )
         self.time -= 1 / const.FPS
-        if self.time < -5:
+        if self.time < -2:
             self.existing = False
             self.reset()
         if self.time > 0:
@@ -86,12 +87,7 @@ class Question:
         print(self.answer, self.guess)
         self.answerSubmitted = True
         self.time = 0
-        if int(self.answer) == 3:
-            print("answer=3")
-        if int(self.guess) == 3:
-            print("guess=3")
         if int(self.answer) == int(self.guess):
-            print("YAY")
             self.correct = True
         else:
             self.correct = False

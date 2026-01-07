@@ -21,7 +21,7 @@ class GameStates(Enum):
     HELP = 4
 
 
-#
+"""
 # async def handle_events(state):
 #     for event in pygame.event.get():
 #         if event.type == pygame.QUIT:
@@ -85,7 +85,7 @@ class GameStates(Enum):
 #                     return GameStates.INTRO
 #
 #     return False
-
+"""
 
 class Game:
     def __init__(self):

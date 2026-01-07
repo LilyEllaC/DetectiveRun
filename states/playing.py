@@ -99,7 +99,8 @@ class PlayingState(GameState):
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if self.question.box.is_hovered() and self.question.checkIfNumber():
-                    self.question.checkGuess()
+                    if not self.question.checkGuess():
+                        self.velocity+=0.5
 
     # --- MATH & LOGIC ONLY ---
     def update(self, dt):
@@ -135,6 +136,7 @@ class PlayingState(GameState):
         if self.question.existing:
             if self.question.time < 0:
                 self.question.correct = False
+                self.velocity+=0.75
 
         # 5. Collision (Death) Logic
         # Note: You need a hasCollided method on your Player class!
