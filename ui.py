@@ -221,6 +221,10 @@ class Player(pygame.sprite.Sprite):
         image = crow_sheet.get_image()
         self.image = pygame.transform.scale(image, (width, height))
         self.rect = self.image.get_rect()
+
+        self.rect.width = self.width - 30
+        self.rect.height = self.height - 30
+
         self.rect.x = x
         self.y = self.floor - self.height - 5
 
