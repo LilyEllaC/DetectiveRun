@@ -2,10 +2,8 @@ import pygame
 import random
 import const as c
 import utility
-import vector2
 
-# pylint: disable=no-member
-pygame.init()
+# pygame.init()
 
 MINIMUM = c.HEIGHT - 50
 OBSTACLE_IMAGES = ["assets/crate.png"]
@@ -241,33 +239,38 @@ class Question:
         self.answerSubmitted = False
         self.correct = True
         self.existing = False
-        self.time=10
+        self.time = 10
 
     def draw(self):
         self.existing = True
         self.box.draw()
         self.image.draw()
         utility.toScreen(self.guess, c.FONT30, c.BLUE, self.x, self.y - 50)
-        self.time-=1/c.FPS
-        if self.time<-5:
-            self.existing=False
-        if self.time>0:
-            utility.toScreen("Time left to answer: "+str(round(self.time)), c.FONT20, c.RED, self.x+50, self.y-50)
+        self.time -= 1 / c.FPS
+        if self.time < -5:
+            self.existing = False
+        if self.time > 0:
+            utility.toScreen(
+                "Time left to answer: " + str(round(self.time)),
+                c.FONT20,
+                c.RED,
+                self.x + 50,
+                self.y - 50,
+            )
 
     def checkGuess(self):
         print(self.answer, self.guess)
-        self.answerSubmitted=True
+        self.answerSubmitted = True
         if str(self.answer) == str(self.guess):
             self.correct = True
         else:
-            
-            self.correct=False
+            self.correct = False
 
     def getGuess(self, event):
         if self.box.is_hovered:
             if event.key == pygame.K_BACKSPACE:
-                self.guess=""
-            elif event.key!=pygame.K_SPACE:
+                self.guess = ""
+            elif event.key != pygame.K_SPACE:
                 self.guess += event.unicode
 
     def checkIfNumber(self):

@@ -49,4 +49,5 @@ def render():
     utility.toScreen(
         text, const.FONT30, const.GREEN, const.WIDTH // 2, const.HEIGHT // 2
     )
+
     restartButton.draw()

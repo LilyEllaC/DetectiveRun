@@ -6,7 +6,7 @@ import utility
 from spriteClasses import Player, Obstacle, Question
 
 # pylint: disable=no-member
-pygame.init()
+
 
 # having the obstacles speed up
 velocity = -5 * c.FPS_SCALING
@@ -65,7 +65,7 @@ def render():
     x = 0
     while x < c.WIDTH:
         tilemap.draw_image(c.screen, vector2.Vector2(x, c.HEIGHT - 70))
-        x += 32*3
+        x += 32 * 3
 
     # moving the crow
     crow.move(question)
@@ -82,8 +82,8 @@ def render():
     # asking a question
     if question.existing:
         question.draw()
-        if question.time<0:
-            question.correct=False
+        if question.time < 0:
+            question.correct = False
         if question.answerSubmitted:
             if question.correct:
                 utility.toScreen(

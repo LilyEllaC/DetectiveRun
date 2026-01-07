@@ -1,23 +1,17 @@
-import time
-
 import pygame
 import asyncio
 
+from enum import Enum
+
 import const
+import utility
 
 import help
 import intro
 import playing
 import end
 
-from enum import Enum
-
-import utility
-
-pygame.init()
-
 running = True
-game_state = None
 
 
 class GameStates(Enum):
@@ -107,7 +101,6 @@ async def main():
 
             rendered = True
 
-            # print("NEW STATE RENDER", game_state.name)
             globals()[game_state.name.lower()].render()
 
             await utility.fade_from_black()
@@ -120,8 +113,6 @@ async def main():
                 game_state = GameStates.END
 
         if not rendered:
-            # print("OLD STATE RENDER", game_state.name)
-
             globals()[game_state.name.lower()].render()
 
         pygame.display.flip()

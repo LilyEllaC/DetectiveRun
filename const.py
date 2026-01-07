@@ -2,7 +2,7 @@ import pygame
 import resources
 import vector2
 
-# pylint: disable=no-member
+
 pygame.init()
 
 WIDTH, HEIGHT = 1200, 800
@@ -46,7 +46,6 @@ LIGHT_RED = (210, 76, 76)
 DARK_GRAY_BLUE = (57, 56, 82)
 
 
-pygame.font.init()
 # fonts/font sizes
 FONT_TYPE = "w.ttf"
 FONT10 = pygame.font.Font(FONT_TYPE, 10)
