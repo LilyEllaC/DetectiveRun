@@ -84,12 +84,12 @@ class HelpState(GameState):
             screen, "Controls", const.FONT30, const.BLACK, const.WIDTH / 2, 290
         )
 
-        self.keysLetterAndSymbols.draw_image(screen, vector2.Vector2(const.WIDTH / 2 - 40, 365))
+        self.keysLetterAndSymbols.draw_image(screen, vector2.Vector2(const.WIDTH / 2 - 72, 400))
 
         self.keysExtra.frame = 20
-        self.keysExtra.draw_image(screen, vector2.Vector2(const.WIDTH / 2 - 64, 400))
+        self.keysExtra.draw_image(screen, vector2.Vector2(const.WIDTH / 2 - 96, 365))
         self.keysExtra.frame = 21
-        self.keysExtra.draw_image(screen, vector2.Vector2(const.WIDTH / 2 - 16, 400))
+        self.keysExtra.draw_image(screen, vector2.Vector2(const.WIDTH / 2 - 48, 365))
 
         utility.toScreen(
             screen,
