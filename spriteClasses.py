@@ -8,6 +8,128 @@ import utility
 MINIMUM = c.HEIGHT - 65
 OBSTACLE_IMAGES = ["assets/crate.png"]
 
+#Question stuff
+class QuestionImage(pygame.sprite.Sprite):
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.images = OBSTACLE_IMAGES
+        self.width = width
+        self.height = height
+
+        # images
+        self.imageNum = random.randint(0, len(self.images) - 1)
+        image = pygame.image.load(self.images[self.imageNum])
+        self.image = pygame.transform.scale(image, (self.width, self.height))
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y
+
+        # getting the name
+        self.imageName = self.images[self.imageNum][:-4] + "s"
+        self.imageName = self.imageName[7:]
+
+    def draw(self):
+        self.rect.x = self.x
+        self.rect.y = self.y
+
+class Question:
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.image = QuestionImage(x, y + 50, width // 3, height // 3)
+        self.box = Button(
+            x - width // 2,
+            y - height // 2,
+            width,
+            height,
+            self.image.imageName,
+            c.FONT37,
+            c.WHITE,
+            c.GRAY,
+            True,
+        )
+        self.guess = ""
+        self.answerSubmitted = False
+        self.correct = True
+        self.existing = False
+        self.time = 10
+        self.obstacleHistory=[]
+
+    def draw(self):
+        self.existing = True
+        self.box.draw()
+        self.image.draw()
+        utility.toScreen(self.guess, c.FONT30, c.BLUE, self.x, self.y - 50)
+        self.time -= 1 / c.FPS
+        if self.time < -5:
+            self.existing = False
+            self.reset()
+        if self.time > 0:
+            utility.toScreen(
+                "Time left to answer: " + str(round(self.time)),
+                c.FONT20,
+                c.RED,
+                self.x + 50,
+                self.y - 50,
+            )
+
+    def checkGuess(self):
+        self.answer = self.obstacleHistory.count(self.image.imageNum)
+        print(self.answer, self.guess)
+        self.answerSubmitted=True
+        self.time=0
+        if int(self.answer)==3:
+            print("answer=3")
+        if int(self.guess)==3:
+            print("guess=3")
+        if int(self.answer) == int(self.guess):
+            print("YAY")
+            self.correct = True
+        else:
+            self.correct = False
+
+    def getGuess(self, event):
+        if self.box.is_hovered:
+            if event.key == pygame.K_BACKSPACE:
+                self.guess = ""
+            elif event.key != pygame.K_SPACE:
+                self.guess += event.unicode
+
+    def reset(self):
+        self.guess = ""
+        self.answerSubmitted = False
+        self.correct = True
+        self.existing = False
+        self.time = 10
+        self.obstacleHistory=[]
+        
+    def checkIfNumber(self):
+        numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        numAreDigits = 0
+        number = str(self.guess)
+        for i in range(0, len(number)):
+            for j in range(0, 10):
+                if str(number[i]) == str(numbers[j]):
+                    numAreDigits += 1
+        if numAreDigits == len(number) and len(number) != 0:
+            return True
+        else:
+            return False
+        
+class QuestionBox:
+    def __init__(self, x, y, width, height, colour):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.colour = colour
+        self.rect = (x, y, width, height)
+
+    def draw(self):
+        pygame.draw.rect(c.screen, self.colour, self.rect)
 
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, x, width, height, velocity):
@@ -32,7 +154,6 @@ class Obstacle(pygame.sprite.Sprite):
         self.passedPlayer=False
         self.timesSinceQuestion=0
         self.time=0
-        self.history=[]
         self.timeForQuestion=random.randint(3,6)
 
     def move(self, velocity, question):
@@ -44,14 +165,14 @@ class Obstacle(pygame.sprite.Sprite):
         else:
             self.timeForQuestion=random.randint(7,12)
 
-    def hasPassedPlayer(self, player, velocity):
+    def hasPassedPlayer(self, player, question:Question):
         if self.x<player.x and not self.passedPlayer:
             self.passedPlayer=True
             # saving the history for the quizzes
-            self.history.append(self.imageNum)
+            question.obstacleHistory.append(self.imageNum)
             self.timesSinceQuestion+=1
 
-    def askQuestion(self, question):
+    def askQuestion(self, question: Question):
         if not question.existing:
             if self.timesSinceQuestion==self.timeForQuestion:
                 self.time+=1/c.FPS
@@ -68,6 +189,12 @@ class Obstacle(pygame.sprite.Sprite):
         self.height = self.image.get_height()
         self.x = random.randint(c.WIDTH, c.WIDTH + 100)
         self.y = self.bottom - self.height
+
+    def resetQuestion(self):
+        self.timesSinceQuestion=0
+        self.time=10
+        self.timeForQuestion=random.randint(0, len(self.images)-1)
+
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, width, height, gravity):
@@ -151,7 +278,6 @@ class Player(pygame.sprite.Sprite):
             "Score: " + str(round(self.points)), c.FONT30, c.BLACK, c.WIDTH - 100, 50
         )
 
-
 class Button:
     def __init__(
         self, x, y, width, height, text, font, colour1, colour2, hasOutline: bool
@@ -208,114 +334,3 @@ class Button:
 
     def set_alpha(self, alpha):
         self.image.set_alpha(alpha)
-
-
-class QuestionImage(pygame.sprite.Sprite):
-    def __init__(self, x, y, width, height):
-        self.x = x
-        self.y = y
-        self.images = OBSTACLE_IMAGES
-        self.width = width
-        self.height = height
-
-        # images
-        self.imageNum = random.randint(0, len(self.images) - 1)
-        image = pygame.image.load(self.images[self.imageNum])
-        self.image = pygame.transform.scale(image, (self.width, self.height))
-        self.rect = self.image.get_rect()
-        self.rect.x = self.x
-        self.rect.y = self.y
-
-        # getting the name
-        self.imageName = self.images[self.imageNum][:-4] + "s"
-        self.imageName = self.imageName[7:]
-
-    def draw(self):
-        self.rect.x = self.x
-        self.rect.y = self.y
-
-
-# both the question box and words
-class Question:
-    def __init__(self, x, y, width, height, history):
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.image = QuestionImage(x, y + 50, width // 3, height // 3)
-        self.box = Button(
-            x - width // 2,
-            y - height // 2,
-            width,
-            height,
-            self.image.imageName,
-            c.FONT37,
-            c.WHITE,
-            c.GRAY,
-            True,
-        )
-        self.answer = history.count(self.image.imageNum)
-        self.guess = ""
-        self.answerSubmitted = False
-        self.correct = True
-        self.existing = False
-        self.time = 10
-
-    def draw(self):
-        self.existing = True
-        self.box.draw()
-        self.image.draw()
-        utility.toScreen(self.guess, c.FONT30, c.BLUE, self.x, self.y - 50)
-        self.time -= 1 / c.FPS
-        if self.time < -5:
-            self.existing = False
-        if self.time > 0:
-            utility.toScreen(
-                "Time left to answer: " + str(round(self.time)),
-                c.FONT20,
-                c.RED,
-                self.x + 50,
-                self.y - 50,
-            )
-
-    def checkGuess(self):
-        print(self.answer, self.guess)
-        self.answerSubmitted=True
-        self.time=0
-        if str(self.answer) == str(self.guess):
-            self.correct = True
-        else:
-            self.correct = False
-
-    def getGuess(self, event):
-        if self.box.is_hovered:
-            if event.key == pygame.K_BACKSPACE:
-                self.guess = ""
-            elif event.key != pygame.K_SPACE:
-                self.guess += event.unicode
-
-    def checkIfNumber(self):
-        numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        numAreDigits = 0
-        number = str(self.guess)
-        for i in range(0, len(number)):
-            for j in range(0, 10):
-                if str(number[i]) == str(numbers[j]):
-                    numAreDigits += 1
-        if numAreDigits == len(number) and len(number) != 0:
-            return True
-        else:
-            return False
-
-
-class QuestionBox:
-    def __init__(self, x, y, width, height, colour):
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.colour = colour
-        self.rect = (x, y, width, height)
-
-    def draw(self):
-        pygame.draw.rect(c.screen, self.colour, self.rect)

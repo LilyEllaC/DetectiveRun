@@ -39,20 +39,16 @@ def reset():
 
     for obstacle in obstacles:
         obstacle.reset()
-        obstacle.history.clear()
+        obstacle.resetQuestion()
     obstacle2.x += c.WIDTH // 2
+    question.reset()
     crow.points = 0
     velocity = -5 * c.FPS_SCALING
 
 
-# dealing with asking questions
-history = []
 
-for obstacle in obstacles:
-    for num in obstacle.history:
-        history.append(num)
 
-question = Question(c.WIDTH // 2, c.HEIGHT // 2, 300, 200, history)
+question = Question(c.WIDTH // 2, c.HEIGHT // 2, 300, 200)
 
 
 # playing
@@ -94,7 +90,7 @@ def render():
     # obstacles
     for obstacle in obstacles:
         obstacle.move(velocity, question)
-        obstacle.hasPassedPlayer(crow, velocity)
+        obstacle.hasPassedPlayer(crow, question)
         if obstacle.x < -obstacle.width:
             obstacle.reset()
 
@@ -102,13 +98,14 @@ def render():
     velocity -= 0.01 * c.FPS_SCALING
 
     # asking a question
-    
     if question.existing:
         question.draw()
         if question.time < 0:
             question.correct = False
         if question.answerSubmitted:
+            print("Is correct: ",str(question.correct))
             if question.correct:
+                print("Yes")
                 utility.toScreen(
                     "You got it right!", c.FONT30, c.GREEN, question.x, question.y + 150
                 )
@@ -121,7 +118,7 @@ def render():
                     question.x,
                     question.y + 50,
                 )
-        if not question.correct:
+        elif not question.correct:
             utility.toScreen2(
                 "You ran out of time.",
                 "The right answer is " + str(question.answer),

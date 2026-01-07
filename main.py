@@ -72,7 +72,7 @@ async def handle_events(state):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if (
                     playing.question.box.is_hovered()
-                    and playing.question.checkIfNumber()
+                    and playing.question.checkIfNumber() 
                 ):
                     playing.question.checkGuess()
 
