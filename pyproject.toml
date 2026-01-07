@@ -7,3 +7,6 @@ dependencies = [
     "pygame>=2.6.1",
     "ruff>=0.14.10",
 ]
+
+[tool.ruff]
+indent-width = 4

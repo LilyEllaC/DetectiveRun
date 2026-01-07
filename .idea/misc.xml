@@ -5,5 +5,7 @@
   </component>
   <component name="RuffConfiguration">
     <option name="enabled" value="true" />
+    <option name="executableDiscoveryMode" value="PATH" />
+    <option name="pathToExecutable" value="$USER_HOME$/.local/bin/ruff" />
   </component>
 </project>

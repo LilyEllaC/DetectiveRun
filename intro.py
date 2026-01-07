@@ -48,6 +48,11 @@ bg = resource.Resource(
     "assets/start.png", vector2.Vector2(2304, 1296), 1, 1, 1, 0.7, vector2.Vector2(0, 0)
 )
 
+crow = resource.Resource(
+    "assets/crow-Sheet.png", vector2.Vector2(64, 64), 8, 14, 0, 4, vector2.Vector2(0, 0)
+)
+crow.animation_cooldown = 100
+
 
 def showIntro():
     bg.drawImage(const.screen, vector2.Vector2(0, 0))

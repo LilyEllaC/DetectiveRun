@@ -49,6 +49,11 @@ async def handle_events(state):
                 elif intro.exitButton.is_hovered():
                     return None
 
+        if state == GameStates.HELP:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if help.backButton.is_hovered():
+                    return GameStates.INTRO
+
         if state == GameStates.PLAYING:
             if event.type == pygame.KEYDOWN:
                 if (
@@ -66,41 +71,38 @@ async def handle_events(state):
                 if event.key == pygame.K_DOWN:
                     playing.crow.faster = 0
 
-        if state == GameStates.HELP:
+        if state == GameStates.END:
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if help.backButton.is_hovered():
+                if end.restartButton.isHovered():
+                    playing.reset()
                     return GameStates.INTRO
 
-        if state ==GameStates.END:
-          if event.type==pygame.MOUSEBUTTONDOWN:
-            if end.restartButton.isHovered():
-              playing.reset()
-              return GameStates.INTRO
+    return False
 
 
 async def main():
     global running
 
-    gameState = GameStates.INTRO
+    game_state = GameStates.INTRO
 
     while running:
-        new_state = await handle_events(gameState)
+        new_state = await handle_events(game_state)
 
-        if new_state is not None:
-            gameState = new_state
-        else:
+        if new_state in GameStates:
+            game_state = new_state
+        elif new_state is None:
             running = False
 
-        if gameState == GameStates.INTRO:
+        if game_state == GameStates.INTRO:
             intro.showIntro()
-        elif gameState == GameStates.PLAYING:
+        elif game_state == GameStates.PLAYING:
             playing.playGame()
 
             if playing.crow.hasCollided(playing.obstacles):
-                gameState = GameStates.END
-        elif gameState == GameStates.END:
+                game_state = GameStates.END
+        elif game_state == GameStates.END:
             end.endGame()
-        elif gameState == GameStates.HELP:
+        elif game_state == GameStates.HELP:
             help.showHelp()
 
         pygame.display.flip()

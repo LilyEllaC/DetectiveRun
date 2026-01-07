@@ -18,18 +18,27 @@ sprites = pygame.sprite.Group()
 sprites.add(crow)
 sprites.add(obstacle1)
 sprites.add(obstacle2)
-obstacles=[obstacle1, obstacle2]
-tilemap=resource.Resource("assets/InteriorTilesLITE.png", vector2.Vector2(32, 32), 15, 15, 0, 13, vector2.Vector2(0, 0))
+obstacles = [obstacle1, obstacle2]
+tilemap = resource.Resource(
+    "assets/InteriorTilesLITE.png",
+    vector2.Vector2(32, 32),
+    15,
+    15,
+    0,
+    13,
+    vector2.Vector2(0, 0),
+)
 
-#restarting the variables
+
+# restarting the variables
 def reset():
     global velocity
     for obstacle in obstacles:
         obstacle.reset()
         obstacle.history.clear()
-    obstacle2.x+=300
-    crow.points=0
-    velocity=0
+    obstacle2.x += 300
+    crow.points = 0
+    velocity = 0
 
 
 #dealing with asking questions
@@ -54,7 +63,7 @@ def playGame():
     # obstacles
     for obstacle in obstacles:
         obstacle.move(velocity)
-        if obstacle.x<-obstacle.width:
+        if obstacle.x < -obstacle.width:
             obstacle.reset()
     velocity-=0.01*c.FPS_SCALING
 

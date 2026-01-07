@@ -42,13 +42,13 @@ class Obstacle(pygame.sprite.Sprite):
         self.rect.y = self.y
 
     def reset(self):
-        self.images=["assets/crate.png"]
-        imageNum=random.randint(0, len(self.images)-1)
-        self.image=pygame.image.load(self.images[imageNum])
-        self.image=pygame.transform.scale(self.image, (self.width, self.height))
-        self.height=self.image.get_height()
-        self.x=random.randint(c.WIDTH, c.WIDTH+100)
-        self.y=self.bottom-self.height
+        self.images = ["assets/crate.png"]
+        imageNum = random.randint(0, len(self.images) - 1)
+        self.image = pygame.image.load(self.images[imageNum])
+        self.image = pygame.transform.scale(self.image, (self.width, self.height))
+        self.height = self.image.get_height()
+        self.x = random.randint(c.WIDTH, c.WIDTH + 100)
+        self.y = self.bottom - self.height
         self.history.append(imageNum)
 
 
@@ -70,7 +70,7 @@ class Player(pygame.sprite.Sprite):
         self.rect=self.image.get_rect()
         self.rect.x=x
         self.y=self.floor-self.height-5
-    
+
     def jump(self):
         if self.jumpPressed:
             if self.y<self.floor-self.height:
@@ -104,7 +104,7 @@ class Player(pygame.sprite.Sprite):
                 self.jumpPressed=False
             self.y+=self.yVelocity
             self.image = pygame.transform.scale(self.image, (self.width, self.height))
-    
+
     def move(self):
         self.rect.x=self.x
         self.rect.y=self.y

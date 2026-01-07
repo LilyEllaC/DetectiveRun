@@ -32,7 +32,9 @@ class Resource:
         frameCount = 0
         for v in range(0, self.vFrames):
             for h in range(0, self.hFrames):
-                self.frameMap[frameCount] = vector2.Vector2(h * self.frameSize.x, v * self.frameSize.y)
+                self.frameMap[frameCount] = vector2.Vector2(
+                    h * self.frameSize.x, v * self.frameSize.y
+                )
                 frameCount += 1
 
     def drawImage(self, screen, position):

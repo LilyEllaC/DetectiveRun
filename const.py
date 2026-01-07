@@ -1,7 +1,5 @@
-import resource
-
 import pygame
-
+import resource
 import vector2
 
 # pylint: disable=no-member
@@ -12,7 +10,7 @@ FPS = 30
 FPS_SCALING = 30 / FPS
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-clock=pygame.time.Clock()
+clock = pygame.time.Clock()
 pygame.display.set_caption("Detective Run")
 
 # Animation tilemaps
