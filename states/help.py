@@ -22,6 +22,26 @@ class HelpState(GameState):
             vector2.Vector2(0, 0),
         )
 
+        self.keysLetterAndSymbols = resources.Resource(
+            "assets/Keyboard Letters and Symbols.png",
+            vector2.Vector2(16, 16),
+            8,
+            14,
+            1,
+            3,
+            vector2.Vector2(0, 0),
+        )
+
+        self.keysExtra = resources.Resource(
+            "assets/Keyboard Extras.png",
+            vector2.Vector2(16, 16),
+            8,
+            8,
+            20,
+            3,
+            vector2.Vector2(0, 0),
+        )
+
         self.back_button = ui.Button(
             38, 30, 50, 50, "", const.FONT40, (0, 0, 0, 0), (0, 0, 0, 0), False
         )
@@ -63,6 +83,13 @@ class HelpState(GameState):
         utility.toScreen(
             screen, "Controls", const.FONT30, const.BLACK, const.WIDTH / 2, 290
         )
+
+        self.keysLetterAndSymbols.draw_image(screen, vector2.Vector2(const.WIDTH / 2, 380))
+
+        self.keysExtra.frame = 20
+        self.keysExtra.draw_image(screen, vector2.Vector2(const.WIDTH / 2, 420))
+        self.keysExtra.frame = 21
+        self.keysExtra.draw_image(screen, vector2.Vector2(const.WIDTH / 2 + 48, 420))
 
         utility.toScreen3(
             screen,
