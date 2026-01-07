@@ -90,6 +90,7 @@ class Question:
         if int(self.answer) == int(self.guess):
             self.correct = True
         else:
+            print("false")
             self.correct = False
 
     def getGuess(self, event):
