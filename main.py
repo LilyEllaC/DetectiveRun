@@ -49,14 +49,25 @@ async def main():
 
             if gameState==GameStates.PLAYING:
                 if event.type==pygame.KEYDOWN:
+                    #able to enter an answer
+                    if playing.question.existing:
+                        playing.question.getGuess(event)
+                    #moving the crow
                     if event.key==pygame.K_SPACE and playing.crow.y==playing.crow.floor-playing.crow.height-5:
                         playing.crow.yVelocity=-20*const.FPS_SCALING
                         playing.crow.jumpPressed=True
                     if event.key==pygame.K_DOWN:
                         playing.crow.faster=1*const.FPS_SCALING
+                #having the falling speedup end
                 if event.type==pygame.KEYUP:
                     if event.key==pygame.K_DOWN:
                         playing.crow.faster=0
+                    #submitting question answer
+                if event.type==pygame.MOUSEBUTTONDOWN:
+                    if playing.question.box.isHovered() and playing.question.checkIfNumber():
+                        playing.question.checkGuess()
+
+
 
             if gameState==GameStates.HELP:
                 if event.type==pygame.MOUSEBUTTONDOWN:

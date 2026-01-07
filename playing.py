@@ -2,7 +2,7 @@ import pygame
 import constants as c
 import resource
 import vector2
-from spriteClasses import Player, Obstacle
+from spriteClasses import Player, Obstacle, Question
 # pylint: disable=no-member
 pygame.init()
 
@@ -32,6 +32,13 @@ def reset():
     velocity=0
 
 
+#dealing with asking questions
+history=[]
+for obstacle in obstacles:
+    for num in obstacle.history:
+        history.append(num)
+question=Question(c.WIDTH//2, c.HEIGHT//2, 300, 200, history)
+
 #playing
 def playGame():
     global velocity
@@ -50,6 +57,10 @@ def playGame():
         if obstacle.x<-obstacle.width:
             obstacle.reset()
     velocity-=0.01*c.FPS_SCALING
+
+    #asking a question
+    question.draw()
+
     
     #drawing it
     sprites.draw(c.screen)
