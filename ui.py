@@ -7,7 +7,7 @@ import vector2
 from states.playing import PlayingState
 
 MINIMUM = const.HEIGHT - 50
-OBSTACLE_IMAGES = ["assets/crate.png"]
+OBSTACLE_IMAGES = ["assets/crate.png", "assets/Keyboard Extras.png"]
 
 
 # Question stuff
@@ -184,7 +184,7 @@ class Obstacle(pygame.sprite.Sprite):
                     question.existing = True
 
     def reset(self):
-        self.images = ["assets/crate.png"]
+        self.images = OBSTACLE_IMAGES
         imageNum = random.randint(0, len(self.images) - 1)
         self.imageNum = imageNum
         self.passedPlayer = False
