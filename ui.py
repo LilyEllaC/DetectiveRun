@@ -79,7 +79,7 @@ class Question:
                 const.FONT20,
                 const.RED,
                 self.x + 50,
-                self.y - 50,
+                self.y - 80,
             )
 
     def checkGuess(self):
