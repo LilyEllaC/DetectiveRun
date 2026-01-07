@@ -84,22 +84,29 @@ class HelpState(GameState):
             screen, "Controls", const.FONT30, const.BLACK, const.WIDTH / 2, 290
         )
 
-        self.keysLetterAndSymbols.draw_image(screen, vector2.Vector2(const.WIDTH / 2, 380))
+        self.keysLetterAndSymbols.draw_image(screen, vector2.Vector2(const.WIDTH / 2 - 40, 365))
 
         self.keysExtra.frame = 20
-        self.keysExtra.draw_image(screen, vector2.Vector2(const.WIDTH / 2, 420))
+        self.keysExtra.draw_image(screen, vector2.Vector2(const.WIDTH / 2 - 64, 400))
         self.keysExtra.frame = 21
-        self.keysExtra.draw_image(screen, vector2.Vector2(const.WIDTH / 2 + 48, 420))
+        self.keysExtra.draw_image(screen, vector2.Vector2(const.WIDTH / 2 - 16, 400))
 
-        utility.toScreen3(
+        utility.toScreen(
             screen,
-            "Space - Jump",
-            "Arrow down - Fall faster",
-            "-------",
+            "Jump",
             const.FONT20,
             const.BLACK,
-            const.WIDTH / 2,
+            const.WIDTH / 2 + 48,
             380,
+        )
+
+        utility.toScreen(
+            screen,
+            "Fall",
+            const.FONT20,
+            const.BLACK,
+            const.WIDTH / 2 + 48,
+            420,
         )
 
         pygame.draw.line(screen, const.BLACK, (80, 50), (40, 50), 4)
