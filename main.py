@@ -126,6 +126,7 @@ async def main():
 
         pygame.display.flip()
         const.clock.tick(const.FPS)
+
         await asyncio.sleep(0)
 
 
