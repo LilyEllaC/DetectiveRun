@@ -69,7 +69,9 @@ class Resource:
         if self.scale != 1.0:
             target_width = int(frame_size_x * self.scale)
             target_height = int(frame_size_y * self.scale)
-            image_to_draw = pygame.transform.scale(image_to_draw, (target_width, target_height))
+            image_to_draw = pygame.transform.scale(
+                image_to_draw, (target_width, target_height)
+            )
 
         image_to_draw.set_alpha(self.alpha)
 
