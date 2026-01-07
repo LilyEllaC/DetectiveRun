@@ -57,7 +57,11 @@ crow.animation_cooldown = 100
 def render():
     bg.draw_image(const.screen, vector2.Vector2(0, 0))
 
-    utility.toScreen("Detective Run", const.FONT60, const.BLACK, const.WIDTH / 2, 100)
+    s = pygame.Surface((500, const.HEIGHT), pygame.SRCALPHA)  # per-pixel alpha
+    s.fill((0, 0, 0, 128))  # notice the alpha value in the color
+    const.screen.blit(s, (700, 0))
+
+    utility.toScreen("Detective Run", const.FONT60, const.WHITE, 950, 150)
 
     # Crow animation
     const.crow.draw_image(const.screen, vector2.Vector2(50, const.HEIGHT / 2 - 245))
