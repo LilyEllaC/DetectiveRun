@@ -242,38 +242,35 @@ class Question:
         self.answer = history.count(self.image.imageNum)
         self.guess = ""
         self.answerSubmitted = False
-        self.correct = False
-        self.existing = False
+        self.correct = True
+        self.existing = True
+        self.time=10
 
     def draw(self):
         self.existing = True
         self.box.draw()
         self.image.draw()
         utility.toScreen(self.guess, c.FONT30, c.BLUE, self.x, self.y - 50)
+        self.time-=1/c.FPS
+        if self.time<-5:
+            self.existing=False
+        if self.time>0:
+            utility.toScreen("Time left to answer: "+str(round(self.time)), c.FONT20, c.RED, self.x+50, self.y-50)
 
     def checkGuess(self):
         print(self.answer, self.guess)
+        self.answerSubmitted=True
         if str(self.answer) == str(self.guess):
-            print("hi")
-            utility.toScreen(
-                "You got it right!", c.FONT30, c.GREEN, self.x, self.y - 300
-            )
             self.correct = True
         else:
-            utility.toScreen2(
-                "That wasn't the rhave you passed since the last check?",
-                "The right answer is " + str(self.answer),
-                c.FONT30,
-                c.RED,
-                self.x,
-                self.y - 200,
-            )
+            
+            self.correct=False
 
     def getGuess(self, event):
         if self.box.is_hovered:
             if event.key == pygame.K_BACKSPACE:
-                self.guess[:-1]
-            else:
+                self.guess=""
+            elif event.key!=pygame.K_SPACE:
                 self.guess += event.unicode
 
     def checkIfNumber(self):

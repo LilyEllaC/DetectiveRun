@@ -2,6 +2,7 @@ import pygame
 import const as c
 import resources
 import vector2
+import utility
 from spriteClasses import Player, Obstacle, Question
 
 # pylint: disable=no-member
@@ -79,7 +80,33 @@ def playGame():
     velocity -= 0.01 * c.FPS_SCALING
 
     # asking a question
-    question.draw()
+    if question.existing:
+        question.draw()
+        if question.time<0:
+            question.correct=False
+        if question.answerSubmitted:
+            if question.correct:
+                utility.toScreen(
+                    "You got it right!", c.FONT30, c.GREEN, question.x, question.y + 150
+                )
+            else:
+                utility.toScreen2(
+                    "That wasn't the answer",
+                    "The right answer is " + str(question.answer),
+                    c.FONT30,
+                    c.RED,
+                    question.x,
+                    question.y + 50,
+                )
+        if not question.correct:
+            utility.toScreen2(
+                "You ran out of time.",
+                "The right answer is " + str(question.answer),
+                c.FONT30,
+                c.RED,
+                question.x,
+                question.y + 50,
+            )
 
     # drawing it
     sprites.draw(c.screen)
