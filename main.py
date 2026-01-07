@@ -106,6 +106,8 @@ async def main():
             game_state = new_state
 
             rendered = True
+
+            # print("NEW STATE RENDER", game_state.name)
             globals()[game_state.name.lower()].render()
 
             await utility.fade_from_black()
@@ -113,11 +115,13 @@ async def main():
             running = False
             break
 
-            # if game_state == GameStates.END:
-        if playing.crow.hasCollided(playing.obstacles):
-            game_state = GameStates.END
+        if game_state == GameStates.PLAYING:
+            if playing.crow.hasCollided(playing.obstacles):
+                game_state = GameStates.END
 
         if not rendered:
+            # print("OLD STATE RENDER", game_state.name)
+
             globals()[game_state.name.lower()].render()
 
         pygame.display.flip()
