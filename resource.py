@@ -22,6 +22,8 @@ class Resource:
         self.position = position
         self.frameMap = dict()
         self.alpha = 255
+        self.animation_cooldown = 0
+        self.last_update = 0
 
         # 2. Build the frame map immediately
         self.buildFrameMap()
