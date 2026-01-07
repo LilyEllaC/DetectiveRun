@@ -10,7 +10,7 @@ FPS_SCALING = 30 / FPS
 
 # screen = pygame.display.set_mode((WIDTH, HEIGHT))
 # clock = pygame.time.Clock()
-# pygame.display.set_caption("Detective Run")
+pygame.display.set_caption("Detective Run")
 
 # Animation tilemaps
 # crow = resources.Resource(

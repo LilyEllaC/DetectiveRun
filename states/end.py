@@ -26,15 +26,7 @@ class EndState(GameState):
         )
 
         self.restart_button = ui.Button(
-            const.WIDTH // 2 - 100,
-            const.HEIGHT - 120,
-            200,
-            100,
-            "RESTART",
-            const.FONT40,
-            const.GREEN,
-            const.DARK_YELLOW,
-            True,
+            const.WIDTH // 2 - 224, const.HEIGHT - 120, 224 * 2, 21 * 2, "", const.FONT40, (0, 0, 0, 0), (0, 0, 0, 0), False
         )
 
     def on_enter(self, **kwargs):
@@ -96,5 +88,9 @@ class EndState(GameState):
             const.WIDTH // 2,
             const.HEIGHT // 2,
         )
+
+        endBtnImg = pygame.image.load("assets/EndBtn.png")
+        endBtnImg = pygame.transform.scale(endBtnImg, (endBtnImg.get_width() * 2, endBtnImg.get_height() * 2))
+        screen.blit(endBtnImg, (const.WIDTH // 2 - endBtnImg.get_width() // 2, const.HEIGHT - 120))
 
         self.restart_button.draw(screen)
