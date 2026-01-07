@@ -1,17 +1,18 @@
 import pygame
 import random
-import constants as c
+import const as c
 import utility
 import vector2
 
 # pylint: disable=no-member
 pygame.init()
 
-MINIMUM=c.HEIGHT-50
-OBSTACLE_IMAGES=["assets/crate.png"]
+MINIMUM = c.HEIGHT - 50
+OBSTACLE_IMAGES = ["assets/crate.png"]
 
 
-#obstancle class
+
+# obstancle class
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, x, width, height, velocity):
         super().__init__()
@@ -31,15 +32,15 @@ class Obstacle(pygame.sprite.Sprite):
         self.rect.x=self.x
         self.rect.y=self.y
 
-        #saving the history for the quizzes
-        self.history=[imageNum]
+        # saving the history for the quizzes
+        self.history = [imageNum]
 
     def move(self, velocity):
-        self.velocity=velocity
-        self.x+=self.velocity
-        self.rect.x=self.x
-        self.rect.y=self.y
-        
+        self.velocity = velocity
+        self.x += self.velocity
+        self.rect.x = self.x
+        self.rect.y = self.y
+
     def reset(self):
         self.images=["assets/crate.png"]
         imageNum=random.randint(0, len(self.images)-1)
@@ -49,6 +50,7 @@ class Obstacle(pygame.sprite.Sprite):
         self.x=random.randint(c.WIDTH, c.WIDTH+100)
         self.y=self.bottom-self.height
         self.history.append(imageNum)
+
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, width, height, gravity):
@@ -125,12 +127,17 @@ class Player(pygame.sprite.Sprite):
             if self.rect.colliderect(obstacle.rect):
                 return True
         return False
-    
-    def displayPoints(self):
-        utility.toScreen("Score: "+str(round(self.points)), c.FONT30, c.BLACK, c.WIDTH-100, 50)
 
-class Button():
-    def __init__(self, x, y, width, height, text, font, colour1, colour2, hasOutline: bool):
+    def displayPoints(self):
+        utility.toScreen(
+            "Score: " + str(round(self.points)), c.FONT30, c.BLACK, c.WIDTH - 100, 50
+        )
+
+
+class Button:
+    def __init__(
+        self, x, y, width, height, text, font, colour1, colour2, hasOutline: bool
+    ):
         self.rect = None
         self.x = x
         self.y = y
@@ -154,17 +161,23 @@ class Button():
 
         if self.hasOutline:
             pygame.draw.rect(c.screen, c.BLACK, self.rect, 3)
-        if self.isHovered():
-            self.colour=self.colours[1]
+        if self.is_hovered():
+            self.colour = self.colours[1]
         else:
-            self.colour=self.colours[0]
-        
-        utility.toScreen(self.text, self.font, self.textColour, self.x + self.width // 2, self.y + self.height // 2)
+            self.colour = self.colours[0]
 
-    def isHovered(self):
-        mouseX, mouseY = pygame.mouse.get_pos()
+        utility.toScreen(
+            self.text,
+            self.font,
+            self.textColour,
+            self.x + self.width // 2,
+            self.y + self.height // 2,
+        )
 
-        if self.rect.collidepoint(mouseX, mouseY):
+    def is_hovered(self):
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+
+        if self.rect.collidepoint(mouse_x, mouse_y):
             return True
 
         return False
@@ -214,7 +227,7 @@ class Question():
         self.box.draw()
         self.image.draw()
         utility.toScreen(self.guess, c.FONT30, c.BLUE, self.x, self.y-50)
-        
+
     def checkGuess(self):
         if self.answer==self.guess:
             utility.toScreen("You got it right!", c.FONT30, c.GREEN, self.x, self.y-300)
@@ -251,7 +264,7 @@ class QuestionBox():
         self.height=height
         self.colour=colour
         self.rect=(x, y, width, height)
-        
+
     def draw(self):
         pygame.draw.rect(c.screen, self.colour, self.rect)
 

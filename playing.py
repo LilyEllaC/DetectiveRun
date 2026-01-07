@@ -1,20 +1,20 @@
-import pygame 
-import constants as c
+import pygame
+import const as c
 import resource
 import vector2
 from spriteClasses import Player, Obstacle, Question
 # pylint: disable=no-member
 pygame.init()
 
-#having the obstacles speed up
-velocity=-5*c.FPS_SCALING
+# having the obstacles speed up
+velocity = -5 * c.FPS_SCALING
 
-#sprites
-crow=Player(150, 100, 100, 1*c.FPS_SCALING)
-obstacleSize=50
-obstacle1=Obstacle(c.WIDTH+20, obstacleSize, obstacleSize, velocity)
-obstacle2=Obstacle(c.WIDTH+c.WIDTH//2, obstacleSize, obstacleSize, velocity)
-sprites=pygame.sprite.Group()
+# sprites
+crow = Player(150, 100, 100, 1 * c.FPS_SCALING)
+obstacleSize = 50
+obstacle1 = Obstacle(c.WIDTH + 20, obstacleSize, obstacleSize, velocity)
+obstacle2 = Obstacle(c.WIDTH + c.WIDTH // 2, obstacleSize, obstacleSize, velocity)
+sprites = pygame.sprite.Group()
 sprites.add(crow)
 sprites.add(obstacle1)
 sprites.add(obstacle2)
@@ -39,19 +39,19 @@ for obstacle in obstacles:
         history.append(num)
 question=Question(c.WIDTH//2, c.HEIGHT//2, 300, 200, history)
 
-#playing
+# playing
 def playGame():
     global velocity
     c.screen.fill(c.ORANGE)
 
     tilemap.drawImage(c.screen, vector2.Vector2(0, c.HEIGHT - 150))
 
-    #moving the crow
+    # moving the crow
     crow.move()
     crow.jump()
     crow.displayPoints()
 
-    #obstacles
+    # obstacles
     for obstacle in obstacles:
         obstacle.move(velocity)
         if obstacle.x<-obstacle.width:
@@ -61,6 +61,6 @@ def playGame():
     #asking a question
     question.draw()
 
-    
+
     #drawing it
     sprites.draw(c.screen)
