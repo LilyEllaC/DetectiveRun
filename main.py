@@ -17,7 +17,7 @@ import utility
 pygame.init()
 
 running = True
-
+game_state = None
 
 class GameStates(Enum):
     INTRO = 1
@@ -48,13 +48,22 @@ async def handle_events(state):
                     return GameStates.HELP
                 elif intro.exitButton.is_hovered():
                     await utility.fadeOutResource(intro.bg)
-                    intro.bg.set_alpha(0)
-
                     return None
 
         if state == GameStates.HELP:
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if help.backButton.is_hovered():
+                mouseX, mouseY = pygame.mouse.get_pos()
+
+                if help.backButton.get_rect(topleft=(38, 30)).collidepoint(mouseX, mouseY):
+                    await utility.fadeOutResource(help.bg)
+                    help.bg.set_alpha(255)
+
+                    intro.showIntro()
+
+                    await utility.fadeInResource(intro.bg)
+
+                    intro.bg.set_alpha(255)
+
                     return GameStates.INTRO
 
         if state == GameStates.PLAYING:
@@ -86,6 +95,7 @@ async def handle_events(state):
 
 async def main():
     global running
+    global game_state
 
     game_state = GameStates.INTRO
 
@@ -95,6 +105,7 @@ async def main():
         if new_state in GameStates:
             game_state = new_state
         elif new_state is None:
+            game_state = None
             running = False
 
         if game_state == GameStates.INTRO:
