@@ -72,12 +72,30 @@ class HelpState(GameState):
         utility.toScreen3(
             screen,
             "After uncovering the murderer’s identity, you begin the chase.",
-            "Stay focused: while pursuing him, your colleagues will question you to gather crucial information about his escape route.",
-            "One mistake like crashing into an obstacle or answering incorrectly and the chase is over.",
+            "Stay focused: while pursuing him, your colleagues will question you to gather crucial information about what obstacles he is using to block his path.",
+            "Crashing into an obstacle will prove the end of the journey.",
             const.FONT20,
             const.BLACK,
             const.WIDTH / 2,
             200,
+        )
+        utility.toScreen3(
+            screen,
+            "When a boxed word appears in the screen, this is a colleague asking how many of those objects you have jumped over since the last message.",
+            "To reply, enter the number by hovering over the box, typing the number and clicking",
+            "If you enter the correct number, the obstacles will slow and you will be given the temporary ability to fly",
+            const.FONT20,
+            const.WHITE,
+            const.WIDTH / 2,
+            700,
+        )
+        utility.toScreen(
+            screen,
+            "However, if you enter the wrong number or are too slow responding, the obstacles will increase in speed",
+            const.FONT20,
+            const.WHITE,
+            const.WIDTH / 2,
+            750,
         )
 
         utility.toScreen(
@@ -93,7 +111,7 @@ class HelpState(GameState):
 
         utility.toScreen(
             screen,
-            "Jump",
+            "Fall",
             const.FONT20,
             const.BLACK,
             const.WIDTH / 2 + 48,
@@ -102,7 +120,7 @@ class HelpState(GameState):
 
         utility.toScreen(
             screen,
-            "Fall",
+            "Jump",
             const.FONT20,
             const.BLACK,
             const.WIDTH / 2 + 48,
