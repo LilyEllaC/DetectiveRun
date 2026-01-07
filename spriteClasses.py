@@ -238,14 +238,16 @@ class Question:
         utility.toScreen(self.guess, c.FONT30, c.BLUE, self.x, self.y - 50)
 
     def checkGuess(self):
-        if self.answer == self.guess:
+        print(self.answer, self.guess)
+        if str(self.answer) == str(self.guess):
+            print("hi")
             utility.toScreen(
                 "You got it right!", c.FONT30, c.GREEN, self.x, self.y - 300
             )
             self.correct = True
         else:
             utility.toScreen2(
-                "That wasn't the rhave you passed since the last check?ight answer",
+                "That wasn't the rhave you passed since the last check?",
                 "The right answer is " + str(self.answer),
                 c.FONT30,
                 c.RED,
@@ -263,7 +265,7 @@ class Question:
     def checkIfNumber(self):
         numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         numAreDigits = 0
-        number = str(self.answer)
+        number = str(self.guess)
         for i in range(0, len(number)):
             for j in range(0, 10):
                 if str(number[i]) == str(numbers[j]):

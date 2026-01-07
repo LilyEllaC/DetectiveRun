@@ -68,6 +68,10 @@ async def handle_events(state):
 
         if state == GameStates.PLAYING:
             if event.type == pygame.KEYDOWN:
+                #able to enter an answer
+                if playing.question.existing:
+                    playing.question.getGuess(event)
+                #moving the crow
                 if (
                     event.key == pygame.K_SPACE
                     # if crow is on the ground
@@ -82,6 +86,11 @@ async def handle_events(state):
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_DOWN:
                     playing.crow.faster = 0
+            #submitting question answer
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                if playing.question.box.is_hovered() and playing.question.checkIfNumber():
+                    playing.question.checkGuess()
+
 
         if state == GameStates.END:
             if event.type == pygame.MOUSEBUTTONDOWN:
