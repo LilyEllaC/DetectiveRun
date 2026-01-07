@@ -85,7 +85,8 @@ class PlayingState(GameState):
 
                 if (
                     event.key == pygame.K_SPACE
-                    and self.crow.y == self.crow.floor - self.crow.height - 5
+                    and (self.crow.y == self.crow.floor - self.crow.height - 5
+                         or self.crow.flying)
                 ):
                     self.crow.yVelocity = -20 * const.FPS_SCALING
                     self.crow.jumpPressed = True
@@ -102,6 +103,7 @@ class PlayingState(GameState):
                     if not self.question.checkGuess():
                         self.velocity-=0.5
                     else:
+                        self.crow.flying=True
                         self.velocity+=1
 
     # --- MATH & LOGIC ONLY ---
@@ -121,6 +123,7 @@ class PlayingState(GameState):
         if not self.question.existing:
             self.crow.move(self.question)
             self.crow.jump()
+            self.crow.stopFlying()
 
         # 3. Obstacle Logic
         for obstacle in self.obstacles:

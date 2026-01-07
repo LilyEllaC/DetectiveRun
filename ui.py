@@ -84,14 +84,14 @@ class Question:
 
     def checkGuess(self):
         self.answer = self.obstacleHistory.count(self.image.imageNum)
-        print(self.answer, self.guess)
         self.answerSubmitted = True
         self.time = 0
         if int(self.answer) == int(self.guess):
             self.correct = True
+            return True
         else:
-            print("false")
             self.correct = False
+            return False
 
     def getGuess(self, event):
         if self.box.is_hovered:
@@ -225,6 +225,9 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = x
         self.y = self.floor - self.height - 5
 
+        self.flying = False
+        self.flyingTimer=0
+
     def jump(self):
         # ... (Same logic as before) ...
         if self.jumpPressed:
@@ -294,6 +297,12 @@ class Player(pygame.sprite.Sprite):
             const.WIDTH - 100,
             50,
         )
+
+    def stopFlying(self):
+        if self.flying:
+            self.flyingTimer+=1/const.FPS
+        if self.flying and self.flyingTimer>5:
+            self.flying=False
 
 
 class Button:
