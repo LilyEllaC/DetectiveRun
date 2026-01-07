@@ -1,6 +1,7 @@
 import pygame 
 import constants as c
-import utility
+import resource
+import vector2
 from spriteClasses import Player, Obstacle
 # pylint: disable=no-member
 pygame.init()
@@ -18,6 +19,7 @@ sprites.add(crow)
 sprites.add(obstacle1)
 sprites.add(obstacle2)
 obstacles=[obstacle1, obstacle2]
+tilemap=resource.Resource("assets/InteriorTilesLITE.png", vector2.Vector2(32, 32), 15, 15, 0, 13, vector2.Vector2(0, 0))
 
 #restarting the variables
 def reset():
@@ -34,6 +36,8 @@ def reset():
 def playGame():
     global velocity
     c.screen.fill(c.ORANGE)
+
+    tilemap.drawImage(c.screen, vector2.Vector2(0, c.HEIGHT - 150))
 
     #moving the crow
     crow.move()

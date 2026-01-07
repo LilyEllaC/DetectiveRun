@@ -1,5 +1,6 @@
 import pygame
 import constants as const
+import main
 import resource
 import utility
 import spriteClasses
@@ -15,11 +16,21 @@ exitButton = spriteClasses.Button(800, const.HEIGHT / 2 + 80, 320, 60, "Exit", c
 exitButton.textColour = const.LIGHT_RED
 
 bg = resource.Resource("assets/start.png", vector2.Vector2(2304, 1296), 1, 1, 1, 0.7, vector2.Vector2(0, 0))
+crow = resource.Resource("assets/crow-Sheet.png", vector2.Vector2(64, 64), 8, 14, 0, 4, vector2.Vector2(0, 0))
+timeElapsed = 0
 
 def showIntro():
+    global timeElapsed
     bg.drawImage(const.screen, vector2.Vector2(0, 0))
 
     utility.toScreen("Detective Run", const.FONT60, const.BLACK, const.WIDTH / 2, 100)
+
+    crow.drawImage(const.screen, vector2.Vector2(50, const.HEIGHT / 2 - 245))
+
+    if crow.frame == 9:
+        crow.frame = 0
+    else:
+        crow.frame += 1
 
     startButton.draw()
     helpButton.draw()
