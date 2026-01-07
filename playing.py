@@ -28,6 +28,7 @@ def playGame():
     #moving the crow
     crow.move()
     crow.jump()
+    crow.displayPoints()
 
     #obstacles
     for obstacle in obstacles:

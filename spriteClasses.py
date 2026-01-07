@@ -57,12 +57,13 @@ class Player(pygame.sprite.Sprite):
         self.jumpNum=0
         self.x=x
         self.width=width
-        self.height=height
+        self.height=height*c.FPS_SCALING
         self.gravity=gravity
         self.floor=MINIMUM
         self.yVelocity=0
         self.jumpPressed=False
         self.faster=0
+        self.points=0
 
         image=pygame.image.load(self.walks[self.walkNum])
         self.image=pygame.transform.scale(image, (width, height))
@@ -95,12 +96,16 @@ class Player(pygame.sprite.Sprite):
         self.rect.x=self.x
         self.rect.y=self.y
         self.image=pygame.transform.scale(self.image, (self.width, self.height))
+        self.points+=0.1
 
     def hasCollided(self, obstacles):
         for obstacle in obstacles:
             if self.rect.colliderect(obstacle.rect):
                 return True
         return False
+    
+    def displayPoints(self):
+        utility.toScreen("Score: "+str(round(self.points)), c.FONT30, c.BLACK, c.WIDTH-100, 50)
 
 class Button():
     def __init__(self, x, y, width, height, text, font, colour1, colour2, hasOutline: bool):
