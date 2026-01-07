@@ -41,7 +41,7 @@ async def fadeInResource(resource):
 
 async def fade(resource, alphaValue):
     const.screen.fill((0, 0, 0))
-    resource.setAlpha(alphaValue)
-    resource.drawImage(const.screen, vector2.Vector2(0, 0))
+    resources.set_alpha(alphaValue)
+    resources.draw_image(const.screen, vector2.Vector2(0, 0))
     pygame.display.flip()
     await asyncio.sleep(0.005)

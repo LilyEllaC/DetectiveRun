@@ -64,7 +64,7 @@ class Player(pygame.sprite.Sprite):
         self.faster = 0
         self.points = 0
 
-        image = c.crow.getImage()
+        image = c.crow.get_image()
         self.image = pygame.transform.scale(image, (width, height))
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -75,7 +75,7 @@ class Player(pygame.sprite.Sprite):
             if self.y < self.floor - self.height:
                 self.yVelocity += self.gravity + self.faster
                 # appearance
-                self.image = c.crow.getImage()
+                self.image = c.crow.get_image()
 
                 current_time = pygame.time.get_ticks()
                 if current_time - c.crow.last_update >= c.crow.animation_cooldown:
@@ -90,7 +90,7 @@ class Player(pygame.sprite.Sprite):
                 self.yVelocity = 0
                 self.y = self.floor - self.height - 5
                 # appearance
-                self.image = c.crow.getImage()
+                self.image = c.crow.get_image()
                 current_time = pygame.time.get_ticks()
                 if current_time - c.crow.last_update >= c.crow.animation_cooldown:
                     c.crow.last_update = current_time
@@ -108,7 +108,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = self.x
         self.rect.y = self.y
 
-        self.image = c.crow.getImage()
+        self.image = c.crow.get_image()
         current_time = pygame.time.get_ticks()
         if current_time - c.crow.last_update >= c.crow.animation_cooldown:
             c.crow.last_update = current_time
@@ -255,7 +255,7 @@ class Question:
             )
 
     def getGuess(self, event):
-        if self.box.isHovered:
+        if self.box.is_hovered:
             if event.key == pygame.K_BACKSPACE:
                 self.guess[:-1]
             else:

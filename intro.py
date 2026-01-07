@@ -1,6 +1,6 @@
 import pygame
 import const as const
-import resource
+import resources
 import utility
 import spriteClasses
 import vector2
@@ -44,23 +44,23 @@ exitButton = spriteClasses.Button(
 )
 exitButton.textColour = const.LIGHT_RED
 
-bg = resource.Resource(
+bg = resources.Resource(
     "assets/start.png", vector2.Vector2(2304, 1296), 1, 1, 1, 0.7, vector2.Vector2(0, 0)
 )
 
-crow = resource.Resource(
+crow = resources.Resource(
     "assets/crow-Sheet.png", vector2.Vector2(64, 64), 8, 14, 0, 4, vector2.Vector2(0, 0)
 )
 crow.animation_cooldown = 100
 
 
 def showIntro():
-    bg.drawImage(const.screen, vector2.Vector2(0, 0))
+    bg.draw_image(const.screen, vector2.Vector2(0, 0))
 
     utility.toScreen("Detective Run", const.FONT60, const.BLACK, const.WIDTH / 2, 100)
 
     # Crow animation
-    const.crow.drawImage(const.screen, vector2.Vector2(50, const.HEIGHT / 2 - 245))
+    const.crow.draw_image(const.screen, vector2.Vector2(50, const.HEIGHT / 2 - 245))
 
     current_time = pygame.time.get_ticks()
     if current_time - const.crow.last_update >= const.crow.animation_cooldown:

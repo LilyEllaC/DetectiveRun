@@ -1,6 +1,6 @@
 import pygame
 import const as c
-import resource
+import resources
 import vector2
 from spriteClasses import Player, Obstacle, Question
 
@@ -20,7 +20,7 @@ sprites.add(crow)
 sprites.add(obstacle1)
 sprites.add(obstacle2)
 obstacles = [obstacle1, obstacle2]
-tilemap = resource.Resource(
+tilemap = resources.Resource(
     "assets/InteriorTilesLITE.png",
     vector2.Vector2(32, 32),
     15,
@@ -55,7 +55,7 @@ def playGame():
     global velocity
     c.screen.fill(c.ORANGE)
 
-    tilemap.drawImage(c.screen, vector2.Vector2(0, c.HEIGHT - 150))
+    tilemap.draw_image(c.screen, vector2.Vector2(0, c.HEIGHT - 150))
 
     # moving the crow
     crow.move()

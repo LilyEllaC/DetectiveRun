@@ -3,7 +3,7 @@ import vector2
 
 
 class Resource:
-    def __init__(self, path, frameSize, hFrames, vFrames, frame, scale, position):
+    def __init__(self, path, frame_size, h_frames, v_frames, frame, scale, position):
         # 1. Load the image directly within the class
         try:
             # .convert_alpha() is crucial for performance and transparency in Pygame
@@ -14,9 +14,9 @@ class Resource:
             self.tilemap_image = None
             self.is_loaded = False
 
-        self.frameSize = frameSize
-        self.hFrames = hFrames
-        self.vFrames = vFrames
+        self.frameSize = frame_size
+        self.hFrames = h_frames
+        self.vFrames = v_frames
         self.frame = frame
         self.scale = scale
         self.position = position
@@ -26,21 +26,23 @@ class Resource:
         self.last_update = 0
 
         # 2. Build the frame map immediately
-        self.buildFrameMap()
+        self.build_frame_map()
 
-    def buildFrameMap(self):
-        frameCount = 0
+    def build_frame_map(self):
+        frame_count = 0
+
         for v in range(0, self.vFrames):
             for h in range(0, self.hFrames):
-                self.frameMap[frameCount] = vector2.Vector2(
+                self.frameMap[frame_count] = vector2.Vector2(
                     h * self.frameSize.x, v * self.frameSize.y
                 )
-                frameCount += 1
 
-    def drawImage(self, screen, position):
-        screen.blit(self.getImage(), (position.x, position.y))
+                frame_count += 1
 
-    def getImage(self):
+    def draw_image(self, screen, position):
+        screen.blit(self.get_image(), (position.x, position.y))
+
+    def get_image(self):
         if not self.is_loaded or self.tilemap_image is None:
             # print("Resource has not been loaded") # Optional: silent fail is often better in loops
             return
@@ -77,5 +79,5 @@ class Resource:
 
         return image_to_draw
 
-    def setAlpha(self, alpha):
+    def set_alpha(self, alpha):
         self.alpha = alpha
