@@ -21,12 +21,12 @@ sprites.add(obstacle1)
 sprites.add(obstacle2)
 obstacles = [obstacle1, obstacle2]
 tilemap = resources.Resource(
-    "assets/InteriorTilesLITE.png",
+    "assets/Terrain.png",
     vector2.Vector2(32, 32),
-    15,
-    15,
-    0,
+    19,
     13,
+    0,
+    3,
     vector2.Vector2(0, 0),
 )
 
@@ -56,9 +56,15 @@ question = Question(c.WIDTH // 2, c.HEIGHT // 2, 300, 200, history)
 # playing
 def playGame():
     global velocity
-    c.screen.fill(c.ORANGE)
+    c.screen.fill(c.DARK_GRAY_BLUE)
 
-    tilemap.draw_image(c.screen, vector2.Vector2(0, c.HEIGHT - 150))
+    tilemap.frame = 21
+    tilemap.draw_image(c.screen, vector2.Vector2(0, c.HEIGHT - 70))
+
+    x = 0
+    while x < c.WIDTH:
+        tilemap.draw_image(c.screen, vector2.Vector2(x, c.HEIGHT - 70))
+        x += 32*3
 
     # moving the crow
     crow.move()

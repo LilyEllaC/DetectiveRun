@@ -43,6 +43,7 @@ BLACK = (0, 0, 0)
 GRAY = (177, 177, 177)
 DARK_GRAY = (100, 100, 100)
 LIGHT_RED = (210, 76, 76)
+DARK_GRAY_BLUE = (57, 56, 82)
 
 
 pygame.font.init()
