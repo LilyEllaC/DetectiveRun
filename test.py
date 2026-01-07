@@ -27,11 +27,12 @@ tilemap = resources.Resource(
     3,
     vector2.Vector2(0, 0),
 )
-bg = resources.Resource("assets/game.png",
-                        vector2.Vector2(2304, 1296),
-                        1, 1, 0, 0.65, vector2.Vector2(0, 0))
+bg = resources.Resource(
+    "assets/game.png", vector2.Vector2(2304, 1296), 1, 1, 0, 0.65, vector2.Vector2(0, 0)
+)
 groundOffset = 0
 groundOffsetBackground = 0
+
 
 # restarting the variables
 def reset():
@@ -44,8 +45,6 @@ def reset():
     question.reset()
     crow.points = 0
     velocity = -5 * c.FPS_SCALING
-
-
 
 
 question = Question(c.WIDTH // 2, c.HEIGHT // 2, 300, 200)
@@ -103,7 +102,7 @@ def render():
         if question.time < 0:
             question.correct = False
         if question.answerSubmitted:
-            print("Is correct: ",str(question.correct))
+            print("Is correct: ", str(question.correct))
             if question.correct:
                 print("Yes")
                 utility.toScreen(

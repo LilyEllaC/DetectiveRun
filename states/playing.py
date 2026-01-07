@@ -1,0 +1,205 @@
+import pygame
+import const
+import resources
+import vector2
+import utility
+import ui
+import asyncio
+
+from states.base import GameState
+
+
+class PlayingState(GameState):
+    def __init__(self, manager):
+        super().__init__(manager)
+
+        # 1. LOAD ASSETS (ONCE)
+        self.tile_map = resources.Resource(
+            "assets/Terrain.png",
+            vector2.Vector2(32, 32),
+            19,
+            13,
+            0,
+            3,
+            vector2.Vector2(0, 0),
+        )
+
+        self.crow_sheet = resources.Resource(
+            "assets/crow-Sheet.png",
+            vector2.Vector2(64, 64),
+            8,
+            14,
+            0,
+            4,
+            vector2.Vector2(0, 0),
+        )
+        self.crow_sheet.animation_cooldown = 100
+
+        self.bg = resources.Resource(
+            "assets/game.png",
+            vector2.Vector2(2304, 1296),
+            1,
+            1,
+            0,
+            0.65,
+            vector2.Vector2(0, 0),
+        )
+
+    def on_enter(self, **kwargs):
+        print("--- Entering Playing ---")
+        self.reset_game()
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+    def reset_game(self):
+        self.velocity = -5 * const.FPS_SCALING
+        self.crow = ui.Player(150, 100, 100, 1 * const.FPS_SCALING, self.crow_sheet)
+
+        self.groundOffset = 0
+        self.groundOffsetBackground = 0
+
+        self.obstacle_size = 50
+        self.obstacle1 = ui.Obstacle(
+            const.WIDTH + 20, self.obstacle_size, self.obstacle_size, self.velocity
+        )
+        self.obstacle2 = ui.Obstacle(
+            const.WIDTH + const.WIDTH // 2,
+            self.obstacle_size,
+            self.obstacle_size,
+            self.velocity,
+        )
+        self.obstacles = [self.obstacle1, self.obstacle2]
+
+        self.sprites = pygame.sprite.Group()
+        self.sprites.add(self.crow)
+        self.sprites.add(self.obstacle1)
+        self.sprites.add(self.obstacle2)
+
+        self.question = ui.Question(const.WIDTH // 2, const.HEIGHT // 2, 300, 200)
+
+    async def handle_events(self, events):
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                if self.question.existing:
+                    self.question.getGuess(event)
+
+                if (
+                    event.key == pygame.K_SPACE
+                    and self.crow.y == self.crow.floor - self.crow.height - 5
+                ):
+                    self.crow.yVelocity = -20 * const.FPS_SCALING
+                    self.crow.jumpPressed = True
+
+                if event.key == pygame.K_DOWN:
+                    self.crow.faster = 1 * const.FPS_SCALING
+
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_DOWN:
+                    self.crow.faster = 0
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if self.question.box.is_hovered() and self.question.checkIfNumber():
+                    self.question.checkGuess()
+
+    # --- MATH & LOGIC ONLY ---
+    def update(self, dt):
+        # 1. Update Background Offsets
+        bg_width = 2304 * 0.65
+        self.groundOffsetBackground += abs(self.velocity) * 0.5
+        if self.groundOffsetBackground >= bg_width:
+            self.groundOffsetBackground -= bg_width
+
+        tile_width = 32 * 3
+        self.groundOffset += abs(self.velocity)
+        if self.groundOffset >= tile_width:
+            self.groundOffset -= tile_width
+
+        # 2. Game Logic
+        if not self.question.existing:
+            self.crow.move(self.question)
+            self.crow.jump()
+
+        # 3. Obstacle Logic
+        for obstacle in self.obstacles:
+            obstacle.move(self.velocity, self.question)
+            # Pass only the Question object, not the class
+            obstacle.hasPassedPlayer(self.crow, self.question)
+
+            if obstacle.x < -obstacle.width:
+                obstacle.reset()
+
+        # 4. Question Logic
+        self.obstacle1.askQuestion(self.question)
+        self.velocity -= 0.01 * const.FPS_SCALING
+
+        if self.question.existing:
+            if self.question.time < 0:
+                self.question.correct = False
+
+        # 5. Collision (Death) Logic
+        # Note: You need a hasCollided method on your Player class!
+        if self.crow.hasCollided(self.obstacles):
+            asyncio.create_task(
+                self.manager.change_state("END", final_score=round(self.crow.points))
+            )
+
+    # --- DRAWING PIXELS ONLY ---
+    def draw(self, screen):
+        screen.fill(const.DARK_GRAY_BLUE)
+
+        # 1. Draw Background
+        bg_width = 2304 * 0.65
+        for i in range(3):
+            x_pos = (i * bg_width) - self.groundOffsetBackground
+            self.bg.draw_image(screen, vector2.Vector2(x_pos, -70))
+
+        # 2. Draw Tiles
+        self.tile_map.frame = 21
+        tile_width = 32 * 3
+        tiles_needed = (const.WIDTH // tile_width) + 2
+
+        for i in range(tiles_needed):
+            x_pos = (i * tile_width) - self.groundOffset
+            self.tile_map.draw_image(screen, vector2.Vector2(x_pos, const.HEIGHT - 70))
+
+        # 3. Draw Sprites (Crow + Obstacles)
+        # We manually draw to ensure layering or use sprite group
+        self.sprites.draw(screen)
+
+        # 4. Draw Score
+        self.crow.displayPoints(screen)
+
+        # 5. Draw Question UI
+        if self.question.existing:
+            self.question.draw(screen)
+
+            if self.question.answerSubmitted:
+                if self.question.correct:
+                    utility.toScreen(
+                        screen,
+                        "You got it right!",
+                        const.FONT30,
+                        const.GREEN,
+                        self.question.x,
+                        self.question.y + 150,
+                    )
+                else:
+                    utility.toScreen2(
+                        screen,
+                        "That wasn't the answer",
+                        "The right answer is " + str(self.question.answer),
+                        const.FONT30,
+                        const.RED,
+                        self.question.x,
+                        self.question.y + 50,
+                    )
+            elif not self.question.correct:
+                utility.toScreen2(
+                    screen,
+                    "You ran out of time.",
+                    "The right answer is " + str(self.question.answer),
+                    const.FONT30,
+                    const.RED,
+                    self.question.x,
+                    self.question.y + 50,
+                )

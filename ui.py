@@ -1,14 +1,15 @@
 import pygame
 import random
-import const as c
+import const
 import utility
+import resources
+import vector2
 
-# pygame.init()
-
-MINIMUM = c.HEIGHT - 65
+MINIMUM = const.HEIGHT - 50
 OBSTACLE_IMAGES = ["assets/crate.png"]
 
-#Question stuff
+
+# Question stuff
 class QuestionImage(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height):
         self.x = x
@@ -33,6 +34,7 @@ class QuestionImage(pygame.sprite.Sprite):
         self.rect.x = self.x
         self.rect.y = self.y
 
+
 class Question:
     def __init__(self, x, y, width, height):
         self.x = x
@@ -46,9 +48,9 @@ class Question:
             width,
             height,
             self.image.imageName,
-            c.FONT37,
-            c.WHITE,
-            c.GRAY,
+            const.FONT37,
+            const.WHITE,
+            const.GRAY,
             True,
         )
         self.guess = ""
@@ -56,22 +58,25 @@ class Question:
         self.correct = True
         self.existing = False
         self.time = 10
-        self.obstacleHistory=[]
+        self.obstacleHistory = []
 
-    def draw(self):
+    def draw(self, screen):
         self.existing = True
-        self.box.draw()
+        self.box.draw(screen)
         self.image.draw()
-        utility.toScreen(self.guess, c.FONT30, c.BLUE, self.x, self.y - 50)
-        self.time -= 1 / c.FPS
+        utility.toScreen(
+            screen, self.guess, const.FONT30, const.BLUE, self.x, self.y - 50
+        )
+        self.time -= 1 / const.FPS
         if self.time < -5:
             self.existing = False
             self.reset()
         if self.time > 0:
             utility.toScreen(
+                screen,
                 "Time left to answer: " + str(round(self.time)),
-                c.FONT20,
-                c.RED,
+                const.FONT20,
+                const.RED,
                 self.x + 50,
                 self.y - 50,
             )
@@ -79,11 +84,11 @@ class Question:
     def checkGuess(self):
         self.answer = self.obstacleHistory.count(self.image.imageNum)
         print(self.answer, self.guess)
-        self.answerSubmitted=True
-        self.time=0
-        if int(self.answer)==3:
+        self.answerSubmitted = True
+        self.time = 0
+        if int(self.answer) == 3:
             print("answer=3")
-        if int(self.guess)==3:
+        if int(self.guess) == 3:
             print("guess=3")
         if int(self.answer) == int(self.guess):
             print("YAY")
@@ -104,8 +109,8 @@ class Question:
         self.correct = True
         self.existing = False
         self.time = 10
-        self.obstacleHistory=[]
-        
+        self.obstacleHistory = []
+
     def checkIfNumber(self):
         numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         numAreDigits = 0
@@ -118,7 +123,8 @@ class Question:
             return True
         else:
             return False
-        
+
+
 class QuestionBox:
     def __init__(self, x, y, width, height, colour):
         self.x = x
@@ -128,15 +134,16 @@ class QuestionBox:
         self.colour = colour
         self.rect = (x, y, width, height)
 
-    def draw(self):
-        pygame.draw.rect(c.screen, self.colour, self.rect)
+    def draw(self, screen):
+        pygame.draw.rect(screen, self.colour, self.rect)
+
 
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, x, width, height, velocity):
         super().__init__()
         self.images = OBSTACLE_IMAGES
         imageNum = random.randint(0, len(self.images) - 1)
-        self.imageNum=imageNum
+        self.imageNum = imageNum
         self.x = x
         self.bottom = MINIMUM
         self.width = width
@@ -150,11 +157,11 @@ class Obstacle(pygame.sprite.Sprite):
         self.y = self.bottom - self.height
         self.rect.x = self.x
         self.rect.y = self.y
-        #question stuff
-        self.passedPlayer=False
-        self.timesSinceQuestion=0
-        self.time=0
-        self.timeForQuestion=random.randint(3,6)
+        # question stuff
+        self.passedPlayer = False
+        self.timesSinceQuestion = 0
+        self.time = 0
+        self.timeForQuestion = random.randint(3, 6)
 
     def move(self, velocity, question):
         if not question.existing:
@@ -163,45 +170,45 @@ class Obstacle(pygame.sprite.Sprite):
             self.rect.x = self.x
             self.rect.y = self.y
         else:
-            self.timeForQuestion=random.randint(7,12)
+            self.timeForQuestion = random.randint(7, 12)
 
-    def hasPassedPlayer(self, player, question:Question):
-        if self.x<player.x and not self.passedPlayer:
-            self.passedPlayer=True
+    def hasPassedPlayer(self, player, question: Question):
+        if self.x < player.x and not self.passedPlayer:
+            self.passedPlayer = True
             # saving the history for the quizzes
             question.obstacleHistory.append(self.imageNum)
-            self.timesSinceQuestion+=1
+            self.timesSinceQuestion += 1
 
     def askQuestion(self, question: Question):
         if not question.existing:
-            if self.timesSinceQuestion==self.timeForQuestion:
-                self.time+=1/c.FPS
-                if self.time>2:
-                    question.existing=True
+            if self.timesSinceQuestion == self.timeForQuestion:
+                self.time += 1 / const.FPS
+                if self.time > 2:
+                    question.existing = True
 
     def reset(self):
         self.images = ["assets/crate.png"]
         imageNum = random.randint(0, len(self.images) - 1)
-        self.imageNum=imageNum
-        self.passedPlayer=False
+        self.imageNum = imageNum
+        self.passedPlayer = False
         self.image = pygame.image.load(self.images[imageNum])
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.height = self.image.get_height()
-        self.x = random.randint(c.WIDTH, c.WIDTH + 100)
+        self.x = random.randint(const.WIDTH, const.WIDTH + 100)
         self.y = self.bottom - self.height
 
     def resetQuestion(self):
-        self.timesSinceQuestion=0
-        self.time=10
-        self.timeForQuestion=random.randint(0, len(self.images)-1)
+        self.timesSinceQuestion = 0
+        self.time = 10
+        self.timeForQuestion = random.randint(0, len(self.images) - 1)
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, width, height, gravity):
+    def __init__(self, x, width, height, gravity, crow_sheet):
         super().__init__()
         self.x = x
         self.width = width
-        self.height = height * c.FPS_SCALING
+        self.height = height * const.FPS_SCALING
         self.gravity = gravity
         self.floor = MINIMUM + 28
         self.yVelocity = 0
@@ -209,42 +216,44 @@ class Player(pygame.sprite.Sprite):
         self.faster = 0
         self.points = 0
 
-        image = c.crow.get_image()
+        self.crow_sheet = crow_sheet
+
+        image = crow_sheet.get_image()
         self.image = pygame.transform.scale(image, (width, height))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.y = self.floor - self.height - 5
 
     def jump(self):
+        # ... (Same logic as before) ...
         if self.jumpPressed:
             if self.y < self.floor - self.height:
                 self.yVelocity += self.gravity + self.faster
-                # appearance
-                self.image = c.crow.get_image()
-
+                self.image = self.crow_sheet.get_image()
                 current_time = pygame.time.get_ticks()
-                if current_time - c.crow.last_update >= c.crow.animation_cooldown:
-                    c.crow.last_update = current_time
-
-                    if c.crow.frame < 48 or c.crow.frame >= 57:
-                        c.crow.frame = 48
+                if (
+                    current_time - self.crow_sheet.last_update
+                    >= self.crow_sheet.animation_cooldown
+                ):
+                    self.crow_sheet.last_update = current_time
+                    if self.crow_sheet.frame < 48 or self.crow_sheet.frame >= 57:
+                        self.crow_sheet.frame = 48
                     else:
-                        c.crow.frame += 1
-            # jump stopping
+                        self.crow_sheet.frame += 1
             else:
                 self.yVelocity = 0
                 self.y = self.floor - self.height - 5
-                # appearance
-                self.image = c.crow.get_image()
+                self.image = self.crow_sheet.get_image()
                 current_time = pygame.time.get_ticks()
-                if current_time - c.crow.last_update >= c.crow.animation_cooldown:
-                    c.crow.last_update = current_time
-
-                    if c.crow.frame < 32 or c.crow.frame >= 41:
-                        c.crow.frame = 32
+                if (
+                    current_time - self.crow_sheet.last_update
+                    >= self.crow_sheet.animation_cooldown
+                ):
+                    self.crow_sheet.last_update = current_time
+                    if self.crow_sheet.frame < 32 or self.crow_sheet.frame >= 41:
+                        self.crow_sheet.frame = 32
                     else:
-                        c.crow.frame += 1
-
+                        self.crow_sheet.frame += 1
                 self.jumpPressed = False
             self.y += self.yVelocity
             self.image = pygame.transform.scale(self.image, (self.width, self.height))
@@ -252,17 +261,18 @@ class Player(pygame.sprite.Sprite):
     def move(self, question):
         self.rect.x = self.x
         self.rect.y = self.y
-
-        self.image = c.crow.get_image()
+        # ... (Same logic as before) ...
+        self.image = self.crow_sheet.get_image()
         current_time = pygame.time.get_ticks()
-        if current_time - c.crow.last_update >= c.crow.animation_cooldown:
-            c.crow.last_update = current_time
-
-            if c.crow.frame < 32 or c.crow.frame >= 41:
-                c.crow.frame = 32
+        if (
+            current_time - self.crow_sheet.last_update
+            >= self.crow_sheet.animation_cooldown
+        ):
+            self.crow_sheet.last_update = current_time
+            if self.crow_sheet.frame < 32 or self.crow_sheet.frame >= 41:
+                self.crow_sheet.frame = 32
             else:
-                c.crow.frame += 1
-
+                self.crow_sheet.frame += 1
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         if not question.existing:
             self.points += 0.1
@@ -273,10 +283,17 @@ class Player(pygame.sprite.Sprite):
                 return True
         return False
 
-    def displayPoints(self):
+    def displayPoints(self, screen):  # <--- UPDATED: Takes screen argument
+        # NOTE: You must also update utility.toScreen to accept a screen arg!
         utility.toScreen(
-            "Score: " + str(round(self.points)), c.FONT30, c.BLACK, c.WIDTH - 100, 50
+            screen,
+            "Score: " + str(round(self.points)),
+            const.FONT30,
+            const.BLACK,
+            const.WIDTH - 100,
+            50,
         )
+
 
 class Button:
     def __init__(
@@ -290,33 +307,29 @@ class Button:
         self.font = font
         self.colours = [colour1, colour2]
         self.colour = colour1
-        self.textColour = c.BLACK
+        self.textColour = const.BLACK
         self.hasOutline = hasOutline
-
         self.image = pygame.Surface((self.width, self.height))
 
-        self.image = (
-            self.image.convert_alpha() if pygame.display.get_surface() else self.image
-        )
+        # Check if display is initialized safely
+        if pygame.display.get_surface():
+            self.image = self.image.convert_alpha()
 
         self.rect = self.image.get_rect(topleft=(self.x, self.y))
-
         self.update_image()
 
     def update_image(self):
         self.image.fill(self.colour)
-
         if self.hasOutline:
-            pygame.draw.rect(self.image, c.BLACK, (0, 0, self.width, self.height), 3)
-
+            pygame.draw.rect(
+                self.image, const.BLACK, (0, 0, self.width, self.height), 3
+            )
         text_surf = self.font.render(self.text, True, self.textColour)
         text_rect = text_surf.get_rect(center=(self.width // 2, self.height // 2))
-
         self.image.blit(text_surf, text_rect)
 
-    def draw(self):
+    def draw(self, screen):  # <--- UPDATED: Takes screen argument
         prev_colour = self.colour
-
         if self.is_hovered():
             self.colour = self.colours[1]
         else:
@@ -325,11 +338,11 @@ class Button:
         if prev_colour != self.colour:
             self.update_image()
 
-        c.screen.blit(self.image, self.rect)
+        # NO MORE CONST.SCREEN
+        screen.blit(self.image, self.rect)
 
     def is_hovered(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
-
         return self.rect.collidepoint(mouse_x, mouse_y)
 
     def set_alpha(self, alpha):

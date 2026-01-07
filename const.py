@@ -2,22 +2,27 @@ import pygame
 import resources
 import vector2
 
-
 pygame.init()
 
 WIDTH, HEIGHT = 1200, 800
 FPS = 30
 FPS_SCALING = 30 / FPS
 
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-clock = pygame.time.Clock()
-pygame.display.set_caption("Detective Run")
+# screen = pygame.display.set_mode((WIDTH, HEIGHT))
+# clock = pygame.time.Clock()
+# pygame.display.set_caption("Detective Run")
 
 # Animation tilemaps
-crow = resources.Resource(
-    "assets/crow-Sheet.png", vector2.Vector2(64, 64), 8, 14, 0, 4, vector2.Vector2(0, 0)
-)
-crow.animation_cooldown = 100
+# crow = resources.Resource(
+#     "assets/crow-Sheet.png",
+#     vector2.Vector2(64, 64),
+#     8,
+#     14,
+#     0,
+#     4,
+#     vector2.Vector2(0, 0),
+# )
+# crow.animation_cooldown = 100
 
 # colours
 RED = (255, 0, 0)
@@ -58,3 +63,6 @@ FONT37 = pygame.font.Font(FONT_TYPE, 37)
 FONT40 = pygame.font.Font(FONT_TYPE, 40)
 FONT60 = pygame.font.Font(FONT_TYPE, 60)
 FONT200 = pygame.font.Font(FONT_TYPE, 200)
+
+MC_FONT_FILE = "assets/fonts/mc.otf"
+MC_FONT = pygame.font.Font(MC_FONT_FILE, 30)
