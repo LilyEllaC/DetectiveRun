@@ -1,11 +1,11 @@
 import asyncio
 
-import const as const
+import const
 import pygame
 
 import vector2
+import resources
 
-# pylint: disable=no-member
 pygame.init()
 
 

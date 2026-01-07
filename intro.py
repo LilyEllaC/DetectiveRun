@@ -1,5 +1,5 @@
 import pygame
-import const as const
+import const
 import resources
 import utility
 import spriteClasses

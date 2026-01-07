@@ -1,7 +1,7 @@
 import pygame.draw
 
 import resources
-import const as const
+import const
 import utility
 import vector2
 
