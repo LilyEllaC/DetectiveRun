@@ -68,13 +68,13 @@ def render():
         x += 32*3
 
     # moving the crow
-    crow.move()
+    crow.move(question)
     crow.jump()
     crow.displayPoints()
 
     # obstacles
     for obstacle in obstacles:
-        obstacle.move(velocity)
+        obstacle.move(velocity, question)
         if obstacle.x < -obstacle.width:
             obstacle.reset()
     velocity -= 0.01 * c.FPS_SCALING

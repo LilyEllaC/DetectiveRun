@@ -33,11 +33,12 @@ class Obstacle(pygame.sprite.Sprite):
         # saving the history for the quizzes
         self.history = [imageNum]
 
-    def move(self, velocity):
-        self.velocity = velocity
-        self.x += self.velocity
-        self.rect.x = self.x
-        self.rect.y = self.y
+    def move(self, velocity, question):
+        if not question.existing:
+            self.velocity = velocity
+            self.x += self.velocity
+            self.rect.x = self.x
+            self.rect.y = self.y
 
     def reset(self):
         self.images = ["assets/crate.png"]
@@ -103,7 +104,7 @@ class Player(pygame.sprite.Sprite):
             self.y += self.yVelocity
             self.image = pygame.transform.scale(self.image, (self.width, self.height))
 
-    def move(self):
+    def move(self, question):
         self.rect.x = self.x
         self.rect.y = self.y
 
@@ -118,7 +119,8 @@ class Player(pygame.sprite.Sprite):
                 c.crow.frame += 1
 
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
-        self.points += 0.1
+        if not question.existing:
+            self.points += 0.1
 
     def hasCollided(self, obstacles):
         for obstacle in obstacles:
@@ -238,7 +240,7 @@ class Question:
         self.guess = ""
         self.answerSubmitted = False
         self.correct = True
-        self.existing = True
+        self.existing = False
         self.time=10
 
     def draw(self):
