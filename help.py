@@ -33,3 +33,15 @@ def render():
 
     # Invisible but interactive button
     backButton.draw()
+
+    utility.toScreen3("After uncovering the murderer’s identity, you begin the chase.",
+                      "Stay focused: while pursuing him, your colleagues will question you to gather crucial information about his escape route.",
+                      "One mistake like crashing into an obstacle or answering incorrectly and the chase is over.",
+                     const.FONT20, const.BLACK, const.WIDTH / 2, 200)
+
+    utility.toScreen("Controls", const.FONT30, const.BLACK, const.WIDTH / 2, 290)
+
+    utility.toScreen3("Space - Jump",
+                      "Arrow down - Fall faster",
+                      "-------",
+                      const.FONT20, const.BLACK, const.WIDTH / 2, 380)
