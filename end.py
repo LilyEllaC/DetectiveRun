@@ -7,8 +7,8 @@ from spriteClasses import Button
 pygame.init()
 
 restartButton = Button(
-    const.WIDTH // 2,
-    const.HEIGHT - 100,
+    const.WIDTH // 2-100,
+    const.HEIGHT - 120,
     200,
     100,
     "RESTART",

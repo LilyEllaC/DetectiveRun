@@ -38,10 +38,9 @@ def reset():
     for obstacle in obstacles:
         obstacle.reset()
         obstacle.history.clear()
-
-    obstacle2.x += 300
+    obstacle2.x += c.WIDTH//2
     crow.points = 0
-    velocity = 0
+    velocity = -5*c.FPS_SCALING
 
 
 # dealing with asking questions
