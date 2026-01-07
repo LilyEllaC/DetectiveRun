@@ -47,7 +47,8 @@ async def handle_events(state):
 
                     return GameStates.HELP
                 elif intro.exitButton.is_hovered():
-                    await utility.fadeOutResource(intro.bg)
+                    await utility.fade_to_black()
+
                     return None
 
         if state == GameStates.HELP:
@@ -104,7 +105,6 @@ async def handle_events(state):
 
 async def main():
     global running
-    global game_state
 
     game_state = GameStates.INTRO
 
@@ -114,8 +114,8 @@ async def main():
         if new_state in GameStates:
             game_state = new_state
         elif new_state is None:
-            game_state = None
             running = False
+            break
 
         if game_state == GameStates.INTRO:
             intro.showIntro()

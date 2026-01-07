@@ -180,6 +180,20 @@ class Button:
 
         return False
 
+    def set_alpha(self, alpha):
+        self.colour = (self.colour[0], self.colour[1], self.colour[2], alpha)
+        self.textColour = (
+            self.textColour[0],
+            self.textColour[1],
+            self.textColour[2],
+            alpha,
+        )
+
+    def draw_image(self, screen, position):
+        # position argument is ignored as Button has its own position,
+        # but kept for compatibility with resources.
+        self.draw()
+
 
 class QuestionImage(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height):
