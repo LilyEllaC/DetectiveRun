@@ -45,6 +45,7 @@ def reset():
     question.reset()
     crow.points = 0
     velocity = -5 * c.FPS_SCALING
+    question.existing=False
 
 
 question = Question(c.WIDTH // 2, c.HEIGHT // 2, 300, 200)
@@ -99,15 +100,13 @@ def render():
     # asking a question
     if question.existing:
         question.draw()
-        if question.time < 0:
-            question.correct = False
         if question.answerSubmitted:
-            print("Is correct: ", str(question.correct))
+            #showing correct text
             if question.correct:
-                print("Yes")
                 utility.toScreen(
-                    "You got it right!", c.FONT30, c.GREEN, question.x, question.y + 150
+                    "You got it right!", c.FONT30, c.GREEN, question.x, question.y + 50
                 )
+                #showing correction text
             else:
                 utility.toScreen2(
                     "That wasn't the answer",
