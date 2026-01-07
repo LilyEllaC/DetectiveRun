@@ -27,7 +27,11 @@ tilemap = resources.Resource(
     3,
     vector2.Vector2(0, 0),
 )
+bg = resources.Resource("assets/game.png",
+                        vector2.Vector2(2304, 1296),
+                        1, 1, 0, 0.65, vector2.Vector2(0, 0))
 groundOffset = 0
+groundOffsetBackground = 0
 
 # restarting the variables
 def reset():
@@ -53,22 +57,32 @@ question = Question(c.WIDTH // 2, c.HEIGHT // 2, 300, 200, history)
 
 # playing
 def render():
-    global velocity, groundOffset
+    global velocity, groundOffset, groundOffsetBackground
     c.screen.fill(c.DARK_GRAY_BLUE)
-    tilemap.frame = 21
 
+    bg_width = 2304 * 0.65
+
+    groundOffsetBackground += abs(velocity) * 0.5
+
+    if groundOffsetBackground >= bg_width:
+        groundOffsetBackground -= bg_width
+
+    for i in range(3):
+        x_pos = (i * bg_width) - groundOffsetBackground
+        bg.draw_image(c.screen, vector2.Vector2(x_pos, -70))
+
+    tilemap.frame = 21
     tile_width = 32 * 3
 
     groundOffset += abs(velocity)
 
     if groundOffset >= tile_width:
-        groundOffset = 0
+        groundOffset -= tile_width
 
     tiles_needed = (c.WIDTH // tile_width) + 2
 
     for i in range(tiles_needed):
         x_pos = (i * tile_width) - groundOffset
-
         tilemap.draw_image(c.screen, vector2.Vector2(x_pos, c.HEIGHT - 70))
 
     # moving the crow

@@ -76,7 +76,7 @@ class Player(pygame.sprite.Sprite):
         self.width = width
         self.height = height * c.FPS_SCALING
         self.gravity = gravity
-        self.floor = MINIMUM
+        self.floor = MINIMUM + 28
         self.yVelocity = 0
         self.jumpPressed = False
         self.faster = 0
