@@ -7,7 +7,7 @@ import vector2
 from states.playing import PlayingState
 
 MINIMUM = const.HEIGHT - 50
-OBSTACLE_IMAGES = ["assets/crate.png", "assets/Box.png"]
+OBSTACLE_IMAGES = ["assets/crate.png", "assets/Box.png", "assets/Bomb.png"]
 
 
 # Question stuff
