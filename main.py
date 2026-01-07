@@ -64,6 +64,12 @@ async def main():
 
                     if help.backButton.get_rect(topleft=(38, 30)).collidepoint(mouseX, mouseY):
                         gameState=GameStates.INTRO
+            
+            if gameState==GameStates.END:
+                if event.type==pygame.MOUSEBUTTONDOWN:
+                    if end.restartButton.isHovered():
+                        gameState=GameStates.INTRO
+                        playing.reset()
 
         
 

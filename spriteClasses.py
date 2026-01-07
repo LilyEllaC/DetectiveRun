@@ -38,15 +38,14 @@ class Obstacle(pygame.sprite.Sprite):
         self.rect.y=self.y
         
     def reset(self):
-        if self.x<-self.width:
-            self.images=["assets/crate.png"]
-            imageNum=random.randint(0, len(self.images)-1)
-            self.image=pygame.image.load(self.images[imageNum])
-            self.image=pygame.transform.scale(self.image, (self.width, self.height))
-            self.height=self.image.get_height()
-            self.x=random.randint(c.WIDTH, c.WIDTH+100)
-            self.y=self.bottom-self.height
-            self.history.append(imageNum)
+        self.images=["assets/crate.png"]
+        imageNum=random.randint(0, len(self.images)-1)
+        self.image=pygame.image.load(self.images[imageNum])
+        self.image=pygame.transform.scale(self.image, (self.width, self.height))
+        self.height=self.image.get_height()
+        self.x=random.randint(c.WIDTH, c.WIDTH+100)
+        self.y=self.bottom-self.height
+        self.history.append(imageNum)
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, width, height, gravity):

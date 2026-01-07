@@ -19,6 +19,16 @@ sprites.add(obstacle1)
 sprites.add(obstacle2)
 obstacles=[obstacle1, obstacle2]
 
+#restarting the variables
+def reset():
+    global velocity
+    for obstacle in obstacles:
+        obstacle.reset()
+        obstacle.history.clear()
+    obstacle2.x+=300
+    crow.points=0
+    velocity=0
+
 
 #playing
 def playGame():
@@ -33,7 +43,8 @@ def playGame():
     #obstacles
     for obstacle in obstacles:
         obstacle.move(velocity)
-        obstacle.reset()
+        if obstacle.x<-obstacle.width:
+            obstacle.reset()
     velocity-=0.01*c.FPS_SCALING
     
     #drawing it
