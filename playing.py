@@ -72,18 +72,23 @@ def render():
         tilemap.draw_image(c.screen, vector2.Vector2(x_pos, c.HEIGHT - 70))
 
     # moving the crow
-    crow.move(question)
-    crow.jump()
-    crow.displayPoints()
+    if not question.existing:
+        crow.move(question)
+        crow.jump()
+        crow.displayPoints()
 
     # obstacles
     for obstacle in obstacles:
         obstacle.move(velocity, question)
+        obstacle.hasPassedPlayer(crow, velocity)
         if obstacle.x < -obstacle.width:
             obstacle.reset()
+
+    obstacle1.askQuestion(question)
     velocity -= 0.01 * c.FPS_SCALING
 
     # asking a question
+    
     if question.existing:
         question.draw()
         if question.time < 0:

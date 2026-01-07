@@ -14,6 +14,7 @@ class Obstacle(pygame.sprite.Sprite):
         super().__init__()
         self.images = OBSTACLE_IMAGES
         imageNum = random.randint(0, len(self.images) - 1)
+        self.imageNum=imageNum
         self.x = x
         self.bottom = MINIMUM
         self.width = width
@@ -27,9 +28,13 @@ class Obstacle(pygame.sprite.Sprite):
         self.y = self.bottom - self.height
         self.rect.x = self.x
         self.rect.y = self.y
-
-        # saving the history for the quizzes
-        self.history = [imageNum]
+        #question stuff
+        self.passedPlayer=False
+        self.timesSinceQuestion=0
+        self.time=0
+        self.history=[]
+        self.timeForQuestion=random.randint(3,6)
+        print(self.timeForQuestion)
 
     def move(self, velocity, question):
         if not question.existing:
@@ -37,17 +42,36 @@ class Obstacle(pygame.sprite.Sprite):
             self.x += self.velocity
             self.rect.x = self.x
             self.rect.y = self.y
+        else:
+            self.timeForQuestion=random.randint(7,12)
+
+    def hasPassedPlayer(self, player, velocity):
+        if self.x<player.x and not self.passedPlayer:
+            self.passedPlayer=True
+            # saving the history for the quizzes
+            self.history.append(self.imageNum)
+            self.timesSinceQuestion+=1
+            print("velocity: ", velocity)
+            print(self.timesSinceQuestion)
+
+    def askQuestion(self, question):
+        if not question.existing:
+            if self.timesSinceQuestion==self.timeForQuestion:
+                self.time+=1/c.FPS
+                if self.time>2:
+                    question.existing=True
+
 
     def reset(self):
         self.images = ["assets/crate.png"]
         imageNum = random.randint(0, len(self.images) - 1)
+        self.imageNum=imageNum
+        self.passedPlayer=False
         self.image = pygame.image.load(self.images[imageNum])
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.height = self.image.get_height()
         self.x = random.randint(c.WIDTH, c.WIDTH + 100)
         self.y = self.bottom - self.height
-        self.history.append(imageNum)
-
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, width, height, gravity):
@@ -260,7 +284,8 @@ class Question:
 
     def checkGuess(self):
         print(self.answer, self.guess)
-        self.answerSubmitted = True
+        self.answerSubmitted=True
+        self.time=0
         if str(self.answer) == str(self.guess):
             self.correct = True
         else:
