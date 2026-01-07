@@ -1,4 +1,9 @@
+import resource
+
 import pygame
+
+import vector2
+
 # pylint: disable=no-member
 pygame.init()
 
@@ -9,6 +14,10 @@ FPS_SCALING = 30 / FPS
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock=pygame.time.Clock()
 pygame.display.set_caption("Detective Run")
+
+# Animation tilemaps
+crow = resource.Resource("assets/crow-Sheet.png", vector2.Vector2(64, 64), 8, 14, 0, 4, vector2.Vector2(0, 0))
+crow.animation_cooldown = 100
 
 # colours
 RED = (255, 0, 0)

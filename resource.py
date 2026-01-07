@@ -7,11 +7,11 @@ class Resource:
         # 1. Load the image directly within the class
         try:
             # .convert_alpha() is crucial for performance and transparency in Pygame
-            self.image = pygame.image.load(path).convert_alpha()
+            self.tilemap_image = pygame.image.load(path).convert_alpha()
             self.is_loaded = True
         except Exception as e:
             print(f"Error loading image '{path}': {e}")
-            self.image = None
+            self.tilemap_image = None
             self.is_loaded = False
 
         self.frameSize = frameSize
@@ -36,7 +36,10 @@ class Resource:
                 frameCount += 1
 
     def drawImage(self, screen, position):
-        if not self.is_loaded or self.image is None:
+        screen.blit(self.getImage(), (position.x, position.y))
+
+    def getImage(self):
+        if not self.is_loaded or self.tilemap_image is None:
             # print("Resource has not been loaded") # Optional: silent fail is often better in loops
             return
 
@@ -57,22 +60,18 @@ class Resource:
         # Define the area of the sprite sheet we want to cut out
         src_rect = pygame.Rect(frame_coord_x, frame_coord_y, frame_size_x, frame_size_y)
 
-        try:
-            # Create a subsurface (fast crop)
-            image_to_draw = self.image.subsurface(src_rect)
+        # Create a subsurface (fast crop)
+        image_to_draw = self.tilemap_image.subsurface(src_rect)
 
-            # Handle Scaling
-            if self.scale != 1.0:
-                target_width = int(frame_size_x * self.scale)
-                target_height = int(frame_size_y * self.scale)
-                image_to_draw = pygame.transform.scale(image_to_draw, (target_width, target_height))
+        # Handle Scaling
+        if self.scale != 1.0:
+            target_width = int(frame_size_x * self.scale)
+            target_height = int(frame_size_y * self.scale)
+            image_to_draw = pygame.transform.scale(image_to_draw, (target_width, target_height))
 
-            # Draw to screen
-            image_to_draw.set_alpha(self.alpha)
-            screen.blit(image_to_draw, (position.x, position.y))
+        image_to_draw.set_alpha(self.alpha)
 
-        except ValueError:
-            print(f"Error: Frame rect {src_rect} is outside image bounds.")
+        return image_to_draw
 
     def setAlpha(self, alpha):
         self.alpha = alpha

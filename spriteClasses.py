@@ -2,6 +2,7 @@ import pygame
 import random
 import constants as c
 import utility
+import vector2
 
 # pylint: disable=no-member
 pygame.init()
@@ -52,10 +53,6 @@ class Obstacle(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, width, height, gravity):
         super().__init__()
-        self.walks=["assets/crow.png"]
-        self.walkNum=0
-        self.jumps=["assets/crow.png"]
-        self.jumpNum=0
         self.x=x
         self.width=width
         self.height=height*c.FPS_SCALING
@@ -66,7 +63,7 @@ class Player(pygame.sprite.Sprite):
         self.faster=0
         self.points=0
 
-        image=pygame.image.load(self.walks[self.walkNum])
+        image=c.crow.getImage()
         self.image=pygame.transform.scale(image, (width, height))
         self.rect=self.image.get_rect()
         self.rect.x=x
@@ -77,25 +74,49 @@ class Player(pygame.sprite.Sprite):
             if self.y<self.floor-self.height:
                 self.yVelocity+=self.gravity+self.faster
                 #appearance
-                self.image=pygame.image.load(self.jumps[self.jumpNum])
-                self.jumpNum+=1
-                if self.jumpNum>=len(self.jumps):
-                    self.jumpNum=0
+                self.image=c.crow.getImage()
+
+                current_time = pygame.time.get_ticks()
+                if current_time - c.crow.last_update >= c.crow.animation_cooldown:
+                    c.crow.last_update = current_time
+
+                    if c.crow.frame < 48 or c.crow.frame >= 57:
+                        c.crow.frame = 48
+                    else:
+                        c.crow.frame += 1
             #jump stopping
             else:
                 self.yVelocity=0
                 self.y=self.floor-self.height-5
                 #appearance
-                self.image=pygame.image.load(self.walks[self.walkNum])
-                self.walkNum+=1
-                if self.walkNum>=len(self.walks):
-                    self.walkNum=0
+                self.image=c.crow.getImage()
+                current_time = pygame.time.get_ticks()
+                if current_time - c.crow.last_update >= c.crow.animation_cooldown:
+                    c.crow.last_update = current_time
+
+                    if c.crow.frame < 32 or c.crow.frame >= 41:
+                        c.crow.frame = 32
+                    else:
+                        c.crow.frame += 1
+
                 self.jumpPressed=False
             self.y+=self.yVelocity
+            self.image = pygame.transform.scale(self.image, (self.width, self.height))
     
     def move(self):
         self.rect.x=self.x
         self.rect.y=self.y
+
+        self.image = c.crow.getImage()
+        current_time = pygame.time.get_ticks()
+        if current_time - c.crow.last_update >= c.crow.animation_cooldown:
+            c.crow.last_update = current_time
+
+            if c.crow.frame < 32 or c.crow.frame >= 41:
+                c.crow.frame = 32
+            else:
+                c.crow.frame += 1
+
         self.image=pygame.transform.scale(self.image, (self.width, self.height))
         self.points+=0.1
 
