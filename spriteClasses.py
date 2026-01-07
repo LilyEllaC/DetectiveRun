@@ -11,7 +11,6 @@ MINIMUM = c.HEIGHT - 50
 OBSTACLE_IMAGES = ["assets/crate.png"]
 
 
-# obstancle class
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, x, width, height, velocity):
         super().__init__()

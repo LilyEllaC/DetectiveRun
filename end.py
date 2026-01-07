@@ -1,27 +1,27 @@
 import pygame
-import const as c
+import const
 import utility
 import playing
-from spriteClasses import Player, Button
+from spriteClasses import Button
 
 pygame.init()
 
 restartButton = Button(
-    c.WIDTH // 2,
-    c.HEIGHT - 100,
+    const.WIDTH // 2,
+    const.HEIGHT - 100,
     200,
     100,
     "RESTART",
-    c.FONT40,
-    c.GREEN,
-    c.DARK_YELLOW,
+    const.FONT40,
+    const.GREEN,
+    const.DARK_YELLOW,
     True,
 )
 
 
 def endGame():
-    c.screen.fill(c.DARK_PURPLE)
-    utility.toScreen("You got hit :(", c.FONT40, c.WHITE, c.WIDTH // 2, 100)
+    const.screen.fill(const.DARK_PURPLE)
+    utility.toScreen("You got hit :(", const.FONT40, const.WHITE, const.WIDTH // 2, 100)
 
     if playing.crow.points < 10:
         text = "How is a score that low even possible?"
@@ -44,5 +44,7 @@ def endGame():
     else:
         text = "Cheater."
 
-    utility.toScreen(text, c.FONT30, c.GREEN, c.WIDTH // 2, c.HEIGHT // 2)
+    utility.toScreen(
+        text, const.FONT30, const.GREEN, const.WIDTH // 2, const.HEIGHT // 2
+    )
     restartButton.draw()

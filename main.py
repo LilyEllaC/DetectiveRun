@@ -47,6 +47,9 @@ async def handle_events(state):
 
                     return GameStates.HELP
                 elif intro.exitButton.is_hovered():
+                    await utility.fadeOutResource(intro.bg)
+                    intro.bg.set_alpha(0)
+
                     return None
 
         if state == GameStates.HELP:
@@ -75,6 +78,7 @@ async def handle_events(state):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if end.restartButton.is_hovered():
                     playing.reset()
+
                     return GameStates.INTRO
 
     return False

@@ -34,9 +34,11 @@ tilemap = resources.Resource(
 # restarting the variables
 def reset():
     global velocity
+
     for obstacle in obstacles:
         obstacle.reset()
         obstacle.history.clear()
+
     obstacle2.x += 300
     crow.points = 0
     velocity = 0
@@ -44,9 +46,11 @@ def reset():
 
 # dealing with asking questions
 history = []
+
 for obstacle in obstacles:
     for num in obstacle.history:
         history.append(num)
+
 question = Question(c.WIDTH // 2, c.HEIGHT // 2, 300, 200, history)
 
 
