@@ -5,7 +5,7 @@ import utility
 
 # pygame.init()
 
-MINIMUM = c.HEIGHT - 50
+MINIMUM = c.HEIGHT - 65
 OBSTACLE_IMAGES = ["assets/crate.png"]
 
 

@@ -5,9 +5,6 @@ import vector2
 import utility
 from spriteClasses import Player, Obstacle, Question
 
-# pylint: disable=no-member
-
-
 # having the obstacles speed up
 velocity = -5 * c.FPS_SCALING
 
@@ -30,7 +27,7 @@ tilemap = resources.Resource(
     3,
     vector2.Vector2(0, 0),
 )
-
+groundOffset = 0
 
 # restarting the variables
 def reset():
@@ -56,16 +53,23 @@ question = Question(c.WIDTH // 2, c.HEIGHT // 2, 300, 200, history)
 
 # playing
 def render():
-    global velocity
+    global velocity, groundOffset
     c.screen.fill(c.DARK_GRAY_BLUE)
-
     tilemap.frame = 21
-    tilemap.draw_image(c.screen, vector2.Vector2(0, c.HEIGHT - 70))
 
-    x = 0
-    while x < c.WIDTH:
-        tilemap.draw_image(c.screen, vector2.Vector2(x, c.HEIGHT - 70))
-        x += 32 * 3
+    tile_width = 32 * 3
+
+    groundOffset += abs(velocity)
+
+    if groundOffset >= tile_width:
+        groundOffset = 0
+
+    tiles_needed = (c.WIDTH // tile_width) + 2
+
+    for i in range(tiles_needed):
+        x_pos = (i * tile_width) - groundOffset
+
+        tilemap.draw_image(c.screen, vector2.Vector2(x_pos, c.HEIGHT - 70))
 
     # moving the crow
     crow.move(question)
