@@ -120,6 +120,11 @@ class PlayingState(GameState):
             if self.groundOffset >= tile_width:
                 self.groundOffset -= tile_width
 
+        # Update background after a score of 250
+        if 150 <= self.crow.points and self.bg.path != "assets/game2.png":
+            self.bg.tile_map_image = pygame.image.load("assets/game2.png").convert_alpha()
+            self.bg.path = "assets/game2.png"
+
         # 2. Game Logic
         if not self.question.existing:
             self.crow.move(self.question)

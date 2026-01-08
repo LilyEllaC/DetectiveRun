@@ -4,6 +4,8 @@ import vector2
 
 class Resource:
     def __init__(self, path, frame_size, h_frames, v_frames, frame, scale, position):
+        self.path = path
+
         try:
             self.tile_map_image = pygame.image.load(path).convert_alpha()
             self.is_loaded = True
