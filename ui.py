@@ -339,7 +339,7 @@ class Player(pygame.sprite.Sprite):
                 self.crow_sheet.image, (self.width, self.height)
             )
         if not question.existing:
-            self.points += 0.1*const.FPS_SCALING
+            self.points += 0.1 * const.FPS_SCALING
 
     def hasCollided(self, obstacles):
         for obstacle in obstacles:
@@ -769,10 +769,20 @@ class Icon:
         self._reload_image()
 
     def _reload_image(self):
+        import sys
+
+        is_web = sys.platform == "emscripten"
+
         try:
-            if self._path.endswith(".svg"):
+            load_path = self._path
+
+            # On web (pygbag), SVG loading doesn't work. Use PNG fallback.
+            if is_web and self._path.endswith(".svg"):
+                load_path = self._path.replace(".svg", ".png")
+
+            if load_path.endswith(".svg"):
                 # Load SVG with specific dimensions to avoid pixelation
-                with open(self._path, "r") as f:
+                with open(load_path, "r") as f:
                     content = f.read()
 
                 # Regex to find the opening <svg ...> tag
@@ -809,7 +819,7 @@ class Icon:
                 bio = io.BytesIO(content.encode("utf-8"))
                 self.image = pygame.image.load(bio, "icon.svg").convert_alpha()
             else:
-                self.image = pygame.image.load(self._path).convert_alpha()
+                self.image = pygame.image.load(load_path).convert_alpha()
 
             self.image = pygame.transform.scale(self.image, (self._width, self._height))
             # Apply anchor

@@ -1,5 +1,6 @@
 import pygame
 import asyncio
+import sys
 
 from enum import Enum
 
@@ -88,11 +89,19 @@ class GameStates(Enum):
 """
 
 
+# Detect if running in pygbag/emscripten
+IS_WEB = sys.platform == "emscripten"
+
+
 class Game:
     def __init__(self):
         pygame.init()
 
-        self.screen = pygame.display.set_mode((const.WIDTH, const.HEIGHT), vsync=1)
+        # Enable vsync on native, but not on web (pygbag) - it causes renderer errors
+        if IS_WEB:
+            self.screen = pygame.display.set_mode((const.WIDTH, const.HEIGHT))
+        else:
+            self.screen = pygame.display.set_mode((const.WIDTH, const.HEIGHT), vsync=1)
         self.clock = pygame.time.Clock()
         self.running = True
 
