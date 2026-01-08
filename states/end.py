@@ -8,6 +8,7 @@ import resources
 import vector2
 import const
 
+newHighScore=False
 
 class EndState(GameState):
     def __init__(self, manager):
@@ -36,6 +37,8 @@ class EndState(GameState):
             (0, 0, 0, 0),
             False,
         )
+        self.newHighScore=False
+
 
     def on_enter(self, **kwargs):
         print("--- Entering End ---")
@@ -95,7 +98,7 @@ class EndState(GameState):
             const.MC_FONT,
             const.GREEN,
             const.WIDTH // 2,
-            const.HEIGHT // 2,
+            const.HEIGHT // 2+100,
         )
 
         endBtnImg = pygame.image.load("assets/EndBtn.png")
@@ -106,5 +109,16 @@ class EndState(GameState):
             endBtnImg,
             (const.WIDTH // 2 - endBtnImg.get_width() // 2, const.HEIGHT - 120),
         )
+
+        #showing high score
+        if fs>int(utility.getFromFile("highScore.txt")):
+            utility.pushToFile(fs, "highScore.txt")
+            self.newHighScore=True
+        
+        if self.newHighScore:
+            utility.toScreen(screen, "New High Score!", const.FONT40, const.TEAL, const.WIDTH//2, const.HEIGHT-200)
+
+        utility.toScreen(screen, "High Score: "+utility.getFromFile("highScore.txt"), const.FONT40, const.TEAL, const.WIDTH//2, const.HEIGHT-150)
+        
 
         self.restart_button.draw(screen)

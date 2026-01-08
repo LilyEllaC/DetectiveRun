@@ -23,6 +23,18 @@ def toScreen3(screen, words1, words2, words3, font, colour, x, y):
     toScreen(screen, words2, font, colour, x, y)
     toScreen(screen, words3, font, colour, x, y + font.get_height())
 
+#highScore stuff
+#getting from and pushing to files
+def getFromFile(fileName):
+    with open(fileName, 'r') as file:
+        highScore=file.read()
+    return highScore
+
+#push name to file
+def pushToFile(score, fileName):
+    with open(fileName, 'w') as file:
+        file.write(str(score))
+
 
 def toScreenMult(screen, words, font, colour, x, y):
     idx = 0
