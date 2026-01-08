@@ -62,13 +62,11 @@ class EndState(GameState):
             text = "Cheater."
         elif fs >= 1000:
             text = "WOW. You won. You managed to catch the murderer with your bare hands -er- wings"
-        elif fs > 500:
+        elif fs > 350:
             text = "Congratulations! Even thought the murderer escaped you, you gave enough information that the murder was caught"
-        elif fs > 500:
-            text = "Congratulations! Even thought the murderer escaped you, you gave enough information that the murder was caught"
-        elif fs > 300:
+        elif fs > 250:
             text = "That was a long chase, but sadly he managed to thwart both you and your fellow cops"
-        elif fs > 200:
+        elif fs > 175:
             text = "You're getting closer, but he just managed to escape both you and your colleagues"
         elif fs > 100:
             text = "You managed to see the escape vehicle, but he got away before your commerades could catch him"
@@ -77,10 +75,12 @@ class EndState(GameState):
         elif fs > 20:
             text = "The murderer just walked out of the door in front of you"          
         elif fs > 10:
-            text = "The murderer escaped you before you even knew who he was"
+            text = "You can't find the murderer even with him being on of 2 people in the room"
+        elif fs > 0:
+            text = "The murderer escaped you before you even knew who he was" 
         else:
-            text = "The murder caught you"
-
+            text = "The murderer caught you"
+        
         utility.toScreen(
             screen,
             text,
