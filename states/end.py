@@ -53,8 +53,13 @@ class EndState(GameState):
         self.back_label.underline_on_hover = True
         self.back_label.anchor_point = (0.5, 0)
 
+    def reset(self):
+        self.new_high_score = False
+
     def on_enter(self, **kwargs):
         print("--- Entering End ---")
+
+        self.reset()
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -92,15 +97,14 @@ class EndState(GameState):
         text_base_y += 24
 
         high_score = utils.getFromFile("highScore.txt")
-        new_high_score = False
 
         if self.final_score > int(high_score):
             utils.pushToFile(self.final_score, "highScore.txt")
             high_score = self.final_score
 
-            new_high_score = True
+            self.new_high_score = True
 
-        if new_high_score:
+        if self.new_high_score:
             text_base_y += utils.to_screen(
                 screen,
                 "New High Score!",
@@ -123,7 +127,7 @@ class EndState(GameState):
             text_base_y,
         )["height"]
 
-        if not new_high_score:
+        if not self.new_high_score:
             text_base_y += utils.draw_centered_pair(
                 screen,
                 "Highest score:",
