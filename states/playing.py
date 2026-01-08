@@ -75,6 +75,7 @@ class PlayingState(GameState):
         self.sprites.add(self.obstacle1)
         self.sprites.add(self.obstacle2)
 
+        ui.obstacleImages=["assets/crate.png", "assets/Box.png", "assets/Bomb.png"]
         self.question = ui.Question(const.WIDTH // 2, const.HEIGHT // 2, 300, 200)
 
     async def handle_events(self, events):
@@ -155,6 +156,10 @@ class PlayingState(GameState):
             asyncio.create_task(
                 self.manager.change_state("END", final_score=round(self.crow.points))
             )
+
+        # having a new obstacle type added
+        if self.crow.points>300:
+            ui.obstacleImages=["assets/crate.png", "assets/Box.png", "assets/Bomb.png", "assets/start.png"]
 
     # --- DRAWING PIXELS ONLY ---
     def draw(self, screen):
