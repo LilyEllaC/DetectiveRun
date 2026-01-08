@@ -55,6 +55,16 @@ class Question:
         )
 
         # dealing with guessing
+        # self.guess = ""
+        # self.answerSubmitted = False
+        # self.correct = True
+        # self.existing = False
+        # self.time = 10
+        # self.obstacleHistory = []
+
+        self.reset()
+
+    def reset(self):
         self.guess = ""
         self.answerSubmitted = False
         self.correct = True
@@ -101,26 +111,24 @@ class Question:
             elif event.key != pygame.K_SPACE:
                 self.guess += event.unicode
 
-    def reset(self):
-        self.guess = ""
-        self.answerSubmitted = False
-        self.correct = True
-        self.existing = False
-        self.time = 10
-        self.obstacleHistory = []
-
     def checkIfNumber(self):
-        numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        numAreDigits = 0
-        number = str(self.guess)
-        for i in range(0, len(number)):
-            for j in range(0, 10):
-                if str(number[i]) == str(numbers[j]):
-                    numAreDigits += 1
-        if numAreDigits == len(number) and len(number) != 0:
+        try:
+            int(self.guess)
             return True
-        else:
+        except ValueError:
             return False
+
+        # numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        # numAreDigits = 0
+        # number = str(self.guess)
+        # for i in range(0, len(number)):
+        #     for j in range(0, 10):
+        #         if str(number[i]) == str(numbers[j]):
+        #             numAreDigits += 1
+        # if numAreDigits == len(number) and len(number) != 0:
+        #     return True
+        # else:
+        #     return False
 
 
 class QuestionBox:
@@ -194,6 +202,8 @@ class Obstacle(pygame.sprite.Sprite):
         self.height = self.image.get_height()
         self.x = random.randint(const.WIDTH, const.WIDTH + 100)
         self.y = self.bottom - self.height
+        self.rect.x = self.x
+        self.rect.y = self.y
 
     def resetQuestion(self):
         self.timesSinceQuestion = 0

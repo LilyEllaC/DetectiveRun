@@ -54,9 +54,6 @@ class PlayingState(GameState):
     def reset_game(self):
         self.velocity = -5 * const.FPS_SCALING
         self.crow = ui.Player(150, 100, 100, 1 * const.FPS_SCALING**2, self.crow_sheet)
-        self.was_flying = False
-        self.base_velocity = self.velocity
-        self.obstacle_cooldown = 0
 
         self.groundOffset = 0
         self.groundOffsetBackground = 0
@@ -81,15 +78,6 @@ class PlayingState(GameState):
         ui.obstacleImages = ["assets/crate.png", "assets/Box.png", "assets/Bomb.png"]
         self.question = ui.Question(const.WIDTH // 2, const.HEIGHT // 2, 300, 200)
 
-    def start_flight(self):
-        self.crow.flying = True
-        for obs in self.obstacles:
-            obs.reset()
-        self.obstacle1.resetQuestion()
-        self.question.existing = False
-        self.base_velocity = self.velocity
-        self.velocity *= 3
-
     async def handle_events(self, events):
         for event in events:
             if event.type == pygame.KEYDOWN:
@@ -108,9 +96,6 @@ class PlayingState(GameState):
                     if self.crow.yVelocity < 0:
                         self.crow.yVelocity = 10 * const.FPS_SCALING
 
-                if event.key == pygame.K_k and const.DEV_MODE:
-                    self.start_flight()
-
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_DOWN:
                     self.crow.faster = 0
@@ -120,7 +105,8 @@ class PlayingState(GameState):
                     if not self.question.checkGuess():
                         self.velocity += 0.5
                     else:
-                        self.start_flight()
+                        self.crow.flying=True
+                        self.velocity/=1.25
 
     # --- MATH & LOGIC ONLY ---
     def update(self, dt):
@@ -137,7 +123,7 @@ class PlayingState(GameState):
                 self.groundOffset -= tile_width
 
         # Update background after a score of 250
-        if 600 <= self.crow.points and self.bg.path != "assets/game2.png":
+        if 150 <= self.crow.points and self.bg.path != "assets/game2.png":
             self.bg.tile_map_image = pygame.image.load(
                 "assets/game2.png"
             ).convert_alpha()
@@ -145,36 +131,21 @@ class PlayingState(GameState):
 
         # 2. Game Logic
         if not self.question.existing:
-            self.crow.move(self.question, self.velocity)
-
-            if self.crow.flying:
-                self.crow.y = (const.HEIGHT // 2) - (self.crow.height // 2)
-                self.crow.yVelocity = 0
-
-            if self.was_flying and not self.crow.flying:
-                self.velocity = self.base_velocity
-                self.obstacle_cooldown = 5.0
-
-            self.was_flying = self.crow.flying
+            self.crow.move(self.question)
             self.crow.jump()
             self.crow.stopFlying()
 
-            if self.obstacle_cooldown > 0:
-                self.obstacle_cooldown -= dt
-
         # 3. Obstacle Logic
-        if not self.crow.flying and self.obstacle_cooldown <= 0:
-            for obstacle in self.obstacles:
-                obstacle.move(self.velocity, self.question)
-                # Pass only the Question object, not the class
-                obstacle.hasPassedPlayer(self.crow, self.question)
+        for obstacle in self.obstacles:
+            obstacle.move(self.velocity, self.question)
+            # Pass only the Question object, not the class
+            obstacle.hasPassedPlayer(self.crow, self.question)
 
-                if obstacle.x < -obstacle.width:
-                    obstacle.reset()
+            if obstacle.x < -obstacle.width:
+                obstacle.reset()
 
-            # 4. Question Logic
-            self.obstacle1.askQuestion(self.question)
-
+        # 4. Question Logic
+        self.obstacle1.askQuestion(self.question)
         self.velocity -= 0.002 * const.FPS_SCALING
 
         if self.question.existing:
