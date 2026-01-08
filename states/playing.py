@@ -24,16 +24,9 @@ class PlayingState(GameState):
             vector2.Vector2(0, 0),
         )
 
-        self.crow_sheet = resources.Resource(
-            "assets/crow-Sheet.png",
-            vector2.Vector2(64, 64),
-            8,
-            14,
-            0,
-            4,
-            vector2.Vector2(0, 0),
-        )
-        self.crow_sheet.animation_cooldown = 100
+        self.crow_sheet = ui.Spritesheet("assets/crow-Sheet.png")
+        self.crow_sheet.frame_width = 64
+        self.crow_sheet.frame_height = 64
 
         self.bg = resources.Resource(
             "assets/game.png",
@@ -55,12 +48,12 @@ class PlayingState(GameState):
 
     def reset(self):
         self.velocity = -5 * const.FPS_SCALING
-        self.crow = ui.Player(150, 100, 100, 1 * const.FPS_SCALING**2, self.crow_sheet)
+        self.crow = ui.Player(150, 150, 150, 1 * const.FPS_SCALING**2, self.crow_sheet)
 
         self.groundOffset = 0
         self.groundOffsetBackground = 0
 
-        self.obstacle_size = 50
+        self.obstacle_size = 60
         self.obstacle1 = ui.Obstacle(
             const.WIDTH + 20, self.obstacle_size, self.obstacle_size, self.velocity
         )
@@ -91,7 +84,7 @@ class PlayingState(GameState):
                     self.crow.y == self.crow.floor - self.crow.height - 5
                     or self.crow.flying
                 ):
-                    self.crow.yVelocity = -20 * const.FPS_SCALING
+                    self.crow.yVelocity = -25 * const.FPS_SCALING
                     self.crow.jumpPressed = True
 
                 if event.key == pygame.K_DOWN:

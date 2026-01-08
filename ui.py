@@ -95,6 +95,17 @@ class Question:
                 self.y - 80,
             )
 
+        if const.DEV_MODE:
+            answer = self.obstacleHistory.count(self.image.imageNum)
+            utility.toScreen(
+                screen,
+                "(devmode) Answer: " + str(answer),
+                const.FONT30,
+                const.MAGENTA,
+                self.x,
+                self.y + 100,
+            )
+
     def checkGuess(self):
         self.answer = self.obstacleHistory.count(self.image.imageNum)
         self.answerSubmitted = True
@@ -210,8 +221,8 @@ class Obstacle(pygame.sprite.Sprite):
 
     def resetQuestion(self):
         self.timesSinceQuestion = 0
-        self.time = 10
-        self.timeForQuestion = random.randint(0, len(self.images) - 1)
+        self.time = 0
+        self.timeForQuestion = random.randint(3, 6)
 
 
 class Player(pygame.sprite.Sprite):
@@ -229,8 +240,27 @@ class Player(pygame.sprite.Sprite):
 
         self.crow_sheet = crow_sheet
 
-        image = crow_sheet.get_image()
-        self.image = pygame.transform.scale(image, (width, height))
+        # Setup animations
+        # Run: Frames 33-42 (1-based) -> 32-41 (0-based)
+        self.crow_sheet.add_animation("run", 32, 41, 100, loop=True)
+        # Jump: Frames 49-61 (1-based) -> 48-60 (0-based)
+        self.crow_sheet.add_animation("jump", 48, 60, 100, loop=False)
+        # Flight Animations (1-based index conversion: i-1)
+        # Fly Start: 64-75 -> 63-74
+        self.crow_sheet.add_animation("fly_start", 63, 74, 100, loop=False)
+        # Flying: 80-92 -> 79-91
+        self.crow_sheet.add_animation("flying", 80, 91, 100, loop=True)
+        # Landing: 97-107 -> 96-106
+        self.crow_sheet.add_animation("landing", 96, 106, 100, loop=False)
+
+        self.crow_sheet.play("run")
+        self.crow_sheet.update()
+
+        if self.crow_sheet.image:
+            self.image = pygame.transform.scale(self.crow_sheet.image, (width, height))
+        else:
+            self.image = pygame.Surface((width, height))
+
         self.rect = self.image.get_rect()
 
         self.rect.width = self.width - 30
@@ -241,56 +271,73 @@ class Player(pygame.sprite.Sprite):
 
         self.flying = False
         self.flyingTimer = 0
+        self._was_flying = False
+        self.is_landing = False
 
     def jump(self):
+        # Disable jump if flying or landing
+        if self.flying or self.is_landing:
+            return
+
         if self.jumpPressed:
+            self.crow_sheet.play("jump")
             if self.y < self.floor - self.height:
                 self.yVelocity += self.gravity + self.faster
-                self.image = self.crow_sheet.get_image()
-                current_time = pygame.time.get_ticks()
-                if (
-                    current_time - self.crow_sheet.last_update
-                    >= self.crow_sheet.animation_cooldown
-                ):
-                    self.crow_sheet.last_update = current_time
-                    if self.crow_sheet.frame < 48 or self.crow_sheet.frame >= 57:
-                        self.crow_sheet.frame = 48
-                    else:
-                        self.crow_sheet.frame += 1
             else:
                 self.yVelocity = 0
                 self.y = self.floor - self.height - 5
-                self.image = self.crow_sheet.get_image()
-                current_time = pygame.time.get_ticks()
-                if (
-                    current_time - self.crow_sheet.last_update
-                    >= self.crow_sheet.animation_cooldown
-                ):
-                    self.crow_sheet.last_update = current_time
-                    if self.crow_sheet.frame < 32 or self.crow_sheet.frame >= 41:
-                        self.crow_sheet.frame = 32
-                    else:
-                        self.crow_sheet.frame += 1
                 self.jumpPressed = False
+                self.crow_sheet.play("run")
+
             self.y += self.yVelocity
-            self.image = pygame.transform.scale(self.image, (self.width, self.height))
+
+            if self.crow_sheet.image:
+                self.image = pygame.transform.scale(
+                    self.crow_sheet.image, (self.width, self.height)
+                )
 
     def move(self, question):
         self.rect.x = self.x
         self.rect.y = self.y
-        # ... (Same logic as before) ...
-        self.image = self.crow_sheet.get_image()
-        current_time = pygame.time.get_ticks()
-        if (
-            current_time - self.crow_sheet.last_update
-            >= self.crow_sheet.animation_cooldown
-        ):
-            self.crow_sheet.last_update = current_time
-            if self.crow_sheet.frame < 32 or self.crow_sheet.frame >= 41:
-                self.crow_sheet.frame = 32
-            else:
-                self.crow_sheet.frame += 1
-        self.image = pygame.transform.scale(self.image, (self.width, self.height))
+
+        # Flight Logic
+        if self.flying and not self._was_flying:
+            self.crow_sheet.play("fly_start")
+
+        if self.flying:
+            # If start animation is done, switch to flying loop
+            if (
+                self.crow_sheet.current_animation == "fly_start"
+                and self.crow_sheet.is_finished
+            ):
+                self.crow_sheet.play("flying")
+            elif self.crow_sheet.current_animation != "fly_start":
+                # Ensure we are in flying animation (if somehow switched or init)
+                self.crow_sheet.play("flying")
+
+        elif self._was_flying and not self.flying:
+            self.crow_sheet.play("landing")
+            self.is_landing = True
+
+        if self.is_landing:
+            if (
+                self.crow_sheet.current_animation == "landing"
+                and self.crow_sheet.is_finished
+            ):
+                self.is_landing = False
+                self.crow_sheet.play("run")
+
+        self._was_flying = self.flying
+
+        # Run Animation (only if not flying, not landing)
+        if not self.flying and not self.is_landing and not self.jumpPressed:
+            self.crow_sheet.play("run")
+
+        self.crow_sheet.update()
+        if self.crow_sheet.image:
+            self.image = pygame.transform.scale(
+                self.crow_sheet.image, (self.width, self.height)
+            )
         if not question.existing:
             self.points += 0.1*const.FPS_SCALING
 
@@ -1239,3 +1286,12 @@ class Spritesheet:
     def draw(self, screen, x, y):
         if self.image:
             screen.blit(self.image, (x, y))
+
+    @property
+    def is_finished(self):
+        if not self.current_animation or self.current_animation not in self.animations:
+            return False
+        anim = self.animations[self.current_animation]
+        if anim["loop"]:
+            return False
+        return self.current_frame_index >= len(anim["frames"]) - 1
