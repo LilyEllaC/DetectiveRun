@@ -137,7 +137,7 @@ class HelpState(GameState):
 
         utils.to_screen(
             screen,
-            ["Jump"],
+            ["Fall"],
             self.font,
             20,
             const.WHITE,
@@ -158,7 +158,7 @@ class HelpState(GameState):
 
         utils.to_screen(
             screen,
-            ["Fall"],
+            ["Jump"],
             self.font,
             20,
             const.WHITE,
