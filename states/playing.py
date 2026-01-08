@@ -170,14 +170,6 @@ class PlayingState(GameState):
                 self.manager.change_state("END", final_score=round(self.crow.points))
             )
 
-        # having a new obstacle type added
-        if self.crow.points > 300:
-            ui.obstacleImages = [
-                "assets/crate.png",
-                "assets/Box.png",
-                "assets/Bomb.png",
-                "assets/start.png",
-            ]
 
     # --- DRAWING PIXELS ONLY ---
     def draw(self, screen):
