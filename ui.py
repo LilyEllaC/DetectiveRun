@@ -7,7 +7,7 @@ import vector2
 from states.playing import PlayingState
 
 MINIMUM = const.HEIGHT - 50
-OBSTACLE_IMAGES = ["assets/crate.png", "assets/Box.png", "assets/Bomb.png"]
+obstacleImages = ["assets/crate.png", "assets/Box.png", "assets/Bomb.png"]
 
 
 # Question stuff
@@ -16,7 +16,7 @@ class QuestionImage(pygame.sprite.Sprite):
         super().__init__()
         self.x = x-140
         self.y = y-140
-        self.images = OBSTACLE_IMAGES
+        self.images = obstacleImages
         self.width = width
         self.height = height
 
@@ -140,7 +140,7 @@ class QuestionBox:
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, x, width, height, velocity):
         super().__init__()
-        self.images = OBSTACLE_IMAGES
+        self.images = obstacleImages
         imageNum = random.randint(0, len(self.images) - 1)
         self.imageNum = imageNum
         self.x = x
@@ -186,7 +186,7 @@ class Obstacle(pygame.sprite.Sprite):
                     question.existing = True
 
     def reset(self):
-        self.images = OBSTACLE_IMAGES
+        self.images = obstacleImages
         imageNum = random.randint(0, len(self.images) - 1)
         self.imageNum = imageNum
         self.passedPlayer = False
