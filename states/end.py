@@ -8,7 +8,8 @@ import resources
 import vector2
 import const
 
-newHighScore=False
+newHighScore = False
+
 
 class EndState(GameState):
     def __init__(self, manager):
@@ -30,9 +31,6 @@ class EndState(GameState):
             (const.WIDTH - 180, const.HEIGHT - 180), pygame.SRCALPHA
         )
 
-        self.newHighScore=False
-
-
         # self.restart_button = ui.Button(
         #     const.WIDTH // 2 - 224,
         #     const.HEIGHT - 120,
@@ -47,14 +45,21 @@ class EndState(GameState):
 
         self.font = "minecraft"
 
-        self.back_label = ui.Label("< Back to Main Menu")
+        self.back_label = ui.Label()
+        self.back_label.text = "< Back to Main Menu"
         self.back_label.font_name = self.font
-        self.back_label.font_size = 24
+        self.back_label.font_size = 20
         self.back_label.colour = const.LIGHT_RED
         self.back_label.underline_on_hover = True
+        self.back_label.anchor_point = (0.5, 0)
+
+    def reset(self):
+        self.newHighScore = False
 
     def on_enter(self, **kwargs):
         print("--- Entering End ---")
+
+        self.reset()
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -91,39 +96,83 @@ class EndState(GameState):
 
         text_base_y += 24
 
-        text_base_y += utils.to_screen(
+        high_score = utils.getFromFile("highScore.txt")
+
+        if self.final_score > int(high_score):
+            utils.pushToFile(self.final_score, "highScore.txt")
+            high_score = self.final_score
+            self.newHighScore = True
+
+        if self.newHighScore:
+            text_base_y += utils.to_screen(
+                screen,
+                "New High Score!",
+                self.font,
+                20,
+                const.YELLOW,
+                const.WIDTH // 2,
+                text_base_y,
+            )["height"]
+
+        text_base_y += utils.draw_centered_pair(
             screen,
-            f"Your score was: {self.final_score}",
+            "Your score was:",
+            str(self.final_score),
             self.font,
             20,
             const.WHITE,
-            const.WIDTH / 2,
+            utils.lerp(const.LIGHT_RED, const.GREEN, self.final_score, high_score),
+            const.WIDTH // 2,
             text_base_y,
         )["height"]
 
-        fs = self.final_score
-        if fs > 50000:
+        if not self.newHighScore:
+            text_base_y += utils.draw_centered_pair(
+                screen,
+                "Highest score:",
+                str(utils.getFromFile("highScore.txt")),
+                self.font,
+                20,
+                const.WHITE,
+                const.GREEN,
+                const.WIDTH // 2,
+                text_base_y,
+            )["height"]
+
+        weight = 0
+        if self.final_score > 50000:
             text = "Cheater."
-        elif fs >= 1000:
+            weight = 0
+        elif self.final_score >= 1000:
             text = "WOW. You won. You managed to catch the murderer\nwith your bare hands -er- wings"
-        elif fs > 350:
+            weight = 1
+        elif self.final_score > 350:
             text = "Congratulations! Even thought the murderer escaped you,\nyou gave enough information that the murder was caught"
-        elif fs > 250:
+            weight = 0.9
+        elif self.final_score > 250:
             text = "That was a long chase, but sadly he managed\nto thwart both you and your fellow cops"
-        elif fs > 175:
+            weight = 0.7
+        elif self.final_score > 175:
             text = "You're getting closer, but he just managed\nto escape both you and your colleagues"
-        elif fs > 100:
+            weight = 0.5
+        elif self.final_score > 100:
             text = "You managed to see the escape vehicle, but he\ngotaway before your commerades could catch him"
-        elif fs > 50:
+            weight = 0.3
+        elif self.final_score > 50:
             text = "You are getting closer, but he still got away"
-        elif fs > 20:
+            weight = 0.1
+        elif self.final_score > 20:
             text = "The murderer just walked out of the door in front of you"
-        elif fs > 10:
+            weight = 0
+        elif self.final_score > 10:
             text = "You can't find the murderer even with\nhim being one of 2 people in the room"
-        elif fs > 0:
+            weight = 0
+        elif self.final_score > 0:
             text = "The murderer escaped you before you even knew who he was"
+            weight = 0
         else:
             text = "The murderer caught you"
+            weight = 0
 
         split_text = text.split("\n")
 
@@ -134,39 +183,12 @@ class EndState(GameState):
             split_text,
             self.font,
             20,
-            const.GREEN,
+            utils.lerp(const.LIGHT_RED, const.GREEN, weight, 1),
             const.WIDTH // 2,
             text_base_y,
         )["height"]
 
-        text_base_y += 24
-
-        if fs > int(utils.getFromFile("highScore.txt")):
-	        utils.pushToFile(fs, "highScore.txt")
-	        self.newHighScore = True
-
-        if self.newHighScore:
-	        text_base_y += utils.to_screen(
-		        screen,
-		        "New High Score!",
-		        self.font,
-		        24,
-		        const.GREEN,
-		        const.WIDTH // 2,
-		        text_base_y,
-	        )["height"]
-
-	        text_base_y += 8
-
-	        text_base_y += utils.to_screen(
-		        screen,
-		        f"High Score: {utils.getFromFile("highScore.txt")}",
-		        self.font,
-		        24,
-		        const.GREEN,
-                const.WIDTH // 2,
-                text_base_y,
-                )["height"]
+        text_base_y += 32
 
         self.back_label.x = const.WIDTH // 2
         self.back_label.y = text_base_y
@@ -183,4 +205,4 @@ class EndState(GameState):
         # )
 
         # self.restart_button.draw(screen)
-        #showing high score
+        # showing high score
