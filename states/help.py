@@ -111,7 +111,7 @@ class HelpState(GameState):
 
         utility.toScreen(
             screen,
-            "Fall",
+            "Jump",
             const.FONT20,
             const.BLACK,
             const.WIDTH / 2 + 48,
@@ -120,7 +120,7 @@ class HelpState(GameState):
 
         utility.toScreen(
             screen,
-            "Jump",
+            "Fall",
             const.FONT20,
             const.BLACK,
             const.WIDTH / 2 + 48,
