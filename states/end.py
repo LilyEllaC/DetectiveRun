@@ -58,27 +58,28 @@ class EndState(GameState):
         )
 
         fs = self.final_score
-
-        if fs < 10:
-            text = "How is a score that low even possible?"
-        elif fs < 20:
-            text = "Were you even playing?"
-        elif fs < 50:
-            text = "You're doing good"
-        elif fs < 100:
-            text = "You ran for a while"
-        elif fs < 200:
-            text = "You must be exhausted"
-        elif fs < 300:
-            text = "Wow, you must have practiced a long time"
-        elif fs < 500:
-            text = "That was great!"
-        elif fs < 1000:
-            text = "Wow, I didn't even know a score that high was possible"
-        elif fs < 50000:
+        if fs > 50000:
             text = "Cheater."
+        elif fs >= 1000:
+            text = "WOW. You won. You managed to catch the murderer with your bare hands -er- wings"
+        elif fs > 500:
+            text = "Congratulations! Even thought the murderer escaped you, you gave enough information that the murder was caught"
+        elif fs > 500:
+            text = "Congratulations! Even thought the murderer escaped you, you gave enough information that the murder was caught"
+        elif fs > 300:
+            text = "That was a long chase, but sadly he managed to thwart both you and your fellow cops"
+        elif fs > 200:
+            text = "You're getting closer, but he just managed to escape both you and your colleagues"
+        elif fs > 100:
+            text = "You managed to see the escape vehicle, but he got away before your commerades could catch him"
+        elif fs > 50:
+            text = "You are getting closer, but he still got away"
+        elif fs > 20:
+            text = "The murderer just walked out of the door in front of you"          
+        elif fs > 10:
+            text = "The murderer escaped you before you even knew who he was"
         else:
-            text = "Cheater."
+            text = "The murder caught you"
 
         utility.toScreen(
             screen,
