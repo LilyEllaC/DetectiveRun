@@ -4,7 +4,7 @@ import vector2
 
 pygame.init()
 
-DEV_MODE = True
+DEV_MODE = False
 
 WIDTH, HEIGHT = 1200, 800
 FPS = 60
