@@ -178,10 +178,11 @@ class Obstacle(pygame.sprite.Sprite):
             self.rect.x = self.x
             self.rect.y = self.y
         else:
-            self.timeForQuestion = random.randint(7, 12)
+            self.timeForQuestion = random.randint(3, 6)
 
     def hasPassedPlayer(self, player, question: Question):
         if self.x < player.x and not self.passedPlayer:
+            print(self.timesSinceQuestion, self.timeForQuestion)
             self.passedPlayer = True
             # saving the history for the quizzes
             question.obstacleHistory.append(self.imageNum)
@@ -291,7 +292,7 @@ class Player(pygame.sprite.Sprite):
                 self.crow_sheet.frame += 1
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         if not question.existing:
-            self.points += 0.1
+            self.points += 0.1*const.FPS_SCALING
 
     def hasCollided(self, obstacles):
         for obstacle in obstacles:

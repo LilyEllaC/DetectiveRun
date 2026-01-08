@@ -106,7 +106,7 @@ class PlayingState(GameState):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if self.question.box.is_hovered() and self.question.checkIfNumber():
                     if not self.question.checkGuess():
-                        self.velocity += 0.5
+                        self.velocity += 0.6
                     else:
                         self.crow.flying = True
                         self.velocity /= 1.25

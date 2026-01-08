@@ -177,7 +177,7 @@ class HelpState(GameState):
                 "",
                 "To reply, enter the number by hovering over the box, typing the number and clicking",
                 "",
-                "If you enter the correct number, the obstacles will slow down",
+                "If you enter the correct number, the obstacles will slow down slightly",
                 "and you will be given the temporary ability to fly",
                 "",
                 "If you got the question wrong, obstacles will speed up",
