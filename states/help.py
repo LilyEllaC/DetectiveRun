@@ -48,11 +48,12 @@ class HelpState(GameState):
 
         self.font = "minecraft"
 
-        self.back_label = ui.Label("< Back")
+        self.back_label = ui.Label()
+        self.back_label.text = "< Back"
         self.back_label.font_name = self.font
         self.back_label.font_size = 24
         self.back_label.colour = const.WHITE
-        self.back_label.x = 102
+        self.back_label.x = 96
         self.back_label.y = 74
         self.back_label.is_italic = True
         self.back_label.underline_on_hover = True
