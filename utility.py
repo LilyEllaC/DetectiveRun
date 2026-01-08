@@ -24,6 +24,16 @@ def toScreen3(screen, words1, words2, words3, font, colour, x, y):
     toScreen(screen, words3, font, colour, x, y + font.get_height())
 
 
+def toScreenMult(screen, words, font, colour, x, y):
+    idx = 0
+    for word in words:
+        new_y = y + ((font.get_height() + 2 // 2) * idx)
+
+        toScreen(screen, word, font, colour, x, new_y)
+
+        idx += 1
+
+
 async def fadeOutResource(resource):
     for i in range(255, 0, -5):
         await fade(resource, i)
