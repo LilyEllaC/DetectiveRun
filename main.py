@@ -20,6 +20,7 @@ class GameStates(Enum):
     END = 3
     HELP = 4
 
+
 """
 # async def handle_events(state):
 #     for event in pygame.event.get():
@@ -86,11 +87,12 @@ class GameStates(Enum):
 #     return False
 """
 
+
 class Game:
     def __init__(self):
         pygame.init()
 
-        self.screen = pygame.display.set_mode((const.WIDTH, const.HEIGHT))
+        self.screen = pygame.display.set_mode((const.WIDTH, const.HEIGHT), vsync=1)
         self.clock = pygame.time.Clock()
         self.running = True
 

@@ -4,8 +4,10 @@ import vector2
 
 pygame.init()
 
+DEV_MODE = True
+
 WIDTH, HEIGHT = 1200, 800
-FPS = 30
+FPS = 60
 FPS_SCALING = 30 / FPS
 
 # screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -47,7 +49,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GRAY = (177, 177, 177)
 DARK_GRAY = (100, 100, 100)
-LIGHT_RED = (210, 76, 76)
+LIGHT_RED = (255, 91, 91)
 DARK_GRAY_BLUE = (57, 56, 82)
 
 
@@ -64,5 +66,5 @@ FONT40 = pygame.font.Font(FONT_TYPE, 40)
 FONT60 = pygame.font.Font(FONT_TYPE, 60)
 FONT200 = pygame.font.Font(FONT_TYPE, 200)
 
-MC_FONT_FILE = "assets/fonts/mc.otf"
+MC_FONT_FILE = "assets/fonts/minecraft/regular"
 MC_FONT = pygame.font.Font(MC_FONT_FILE, 30)

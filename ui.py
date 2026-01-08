@@ -206,7 +206,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.x = x
         self.width = width
-        self.height = height * const.FPS_SCALING
+        self.height = height
         self.gravity = gravity
         self.floor = MINIMUM + 28
         self.yVelocity = 0
@@ -275,7 +275,7 @@ class Player(pygame.sprite.Sprite):
 
             self.image = pygame.transform.scale(self.image, (self.width, self.height))
 
-    def move(self, question):
+    def move(self, question, velocity):
         self.rect.x = self.x
         self.rect.y = self.y
         # ... (Same logic as before) ...
@@ -292,7 +292,7 @@ class Player(pygame.sprite.Sprite):
                 self.crow_sheet.frame += 1
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         if not question.existing:
-            self.points += 0.1
+            self.points += abs(velocity) * 0.025
 
     def hasCollided(self, obstacles):
         for obstacle in obstacles:
@@ -314,7 +314,7 @@ class Player(pygame.sprite.Sprite):
     def stopFlying(self):
         if self.flying:
             self.flyingTimer += 1 / const.FPS
-        if self.flying and self.flyingTimer > 5:
+        if self.flying and self.flyingTimer > 7:
             self.flying = False
 
 
@@ -370,3 +370,161 @@ class Button:
 
     def set_alpha(self, alpha):
         self.image.set_alpha(alpha)
+
+
+class Label:
+    def __init__(
+        self,
+        text,
+        font_name="minecraft",
+        font_size=20,
+        colour=(255, 255, 255),
+        x=0,
+        y=0,
+        is_bold=False,
+        is_italic=False,
+        underline_on_hover=False,
+    ):
+        # Initialize private variables
+        self._text = text if not isinstance(text, str) else [text]
+        self._font_name = font_name
+        self._font_size = font_size
+        self._colour = colour
+        self._x = x
+        self._y = y
+        self._is_bold = is_bold
+        self._is_italic = is_italic
+        self.underline_on_hover = underline_on_hover
+
+        self.line_height = 2
+        self.rect = pygame.Rect(0, 0, 0, 0)
+        self.font = None
+
+        # Initial build
+        self._update_font()
+
+    def _update_font(self):
+        self.font = utility.get_font(
+            self._font_name, self._font_size, self._is_bold, self._is_italic
+        )
+        self.update_rect()
+
+    def update_rect(self):
+        if not self.font:
+            return
+
+        font_h = self.font.get_height()
+        total_h = len(self._text) * (font_h + self.line_height)
+
+        max_w = 0
+        for line in self._text:
+            w, h = self.font.size(line)
+            if w > max_w:
+                max_w = w
+
+        self.rect.width = max_w
+        self.rect.height = total_h
+
+        # Calculate topleft based on the first line center being (x, y)
+        top_y = self._y - font_h // 2
+
+        self.rect.centerx = self._x
+        self.rect.top = top_y
+
+    # --- Properties ---
+
+    @property
+    def text(self):
+        return self._text
+
+    @text.setter
+    def text(self, value):
+        self._text = value if not isinstance(value, str) else [value]
+        self.update_rect()
+
+    @property
+    def font_name(self):
+        return self._font_name
+
+    @font_name.setter
+    def font_name(self, value):
+        self._font_name = value
+        self._update_font()
+
+    @property
+    def font_size(self):
+        return self._font_size
+
+    @font_size.setter
+    def font_size(self, value):
+        self._font_size = value
+        self._update_font()
+
+    @property
+    def colour(self):
+        return self._colour
+
+    @colour.setter
+    def colour(self, value):
+        self._colour = value
+
+    @property
+    def x(self):
+        return self._x
+
+    @x.setter
+    def x(self, value):
+        self._x = value
+        self.update_rect()
+
+    @property
+    def y(self):
+        return self._y
+
+    @y.setter
+    def y(self, value):
+        self._y = value
+        self.update_rect()
+
+    @property
+    def is_bold(self):
+        return self._is_bold
+
+    @is_bold.setter
+    def is_bold(self, value):
+        self._is_bold = value
+        self._update_font()
+
+    @property
+    def is_italic(self):
+        return self._is_italic
+
+    @is_italic.setter
+    def is_italic(self, value):
+        self._is_italic = value
+        self._update_font()
+
+    def draw(self, screen):
+        idx = 0
+        is_hovered = self.is_hovered()
+
+        for line in self._text:
+            new_y = self._y + ((self.font.get_height() + self.line_height // 2) * idx)
+
+            text_surf = self.font.render(line, True, self._colour)
+            text_rect = text_surf.get_rect()
+            text_rect.center = (self._x, new_y)
+
+            screen.blit(text_surf, text_rect)
+
+            if self.underline_on_hover and is_hovered:
+                # elegant underline 2px below text, 2px thick
+                start_pos = (text_rect.left, text_rect.bottom - 2)
+                end_pos = (text_rect.right, text_rect.bottom - 2)
+                pygame.draw.line(screen, self._colour, start_pos, end_pos, 2)
+
+            idx += 1
+
+    def is_hovered(self):
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        return self.rect.collidepoint(mouse_x, mouse_y)

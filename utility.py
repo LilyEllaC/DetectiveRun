@@ -1,8 +1,11 @@
 import pygame
 import asyncio
+import os
 
 import const
 import vector2
+
+loaded_fonts = {}
 
 
 def toScreen(screen, words, font, colour, x, y):
@@ -36,14 +39,88 @@ def pushToFile(score, fileName):
         file.write(str(score))
 
 
-def toScreenMult(screen, words, font, colour, x, y):
-    idx = 0
-    for word in words:
-        new_y = y + ((font.get_height() + 2 // 2) * idx)
+def toScreen(screen, words, font, colour, x, y):
+    text = font.render(words, True, colour)
+    textRect = text.get_rect()
+    textRect.center = (x, y)
 
-        toScreen(screen, word, font, colour, x, new_y)
+    screen.blit(text, textRect)
+
+
+def get_font(font, font_size, is_bold=False, is_italic=False):
+    target_font = None
+    key = f"{font}.{font_size}.{is_bold}.{is_italic}"
+
+    if key in loaded_fonts:
+        target_font = loaded_fonts[key]
+
+    if target_font is None:
+        base_path = f"assets/fonts/{font}"
+
+        if os.path.isdir(base_path):
+            if is_bold and is_italic:
+                filename = "bold-italic"
+            elif is_bold:
+                filename = "bold"
+            elif is_italic:
+                filename = "italic"
+            else:
+                filename = "regular"
+
+            font_path = os.path.join(base_path, filename)
+        else:
+            font_path = base_path
+
+        try:
+            target_font = pygame.font.Font(font_path, font_size)
+        except FileNotFoundError:
+            print(
+                f"Warning: Could not find font {font_path}. Falling back to default styling."
+            )
+
+            if os.path.isdir(base_path):
+                fallback_path = os.path.join(base_path, "regular")
+
+                try:
+                    target_font = pygame.font.Font(fallback_path, font_size)
+                    target_font.set_bold(is_bold)
+                    target_font.set_italic(is_italic)
+                except FileNotFoundError:
+                    target_font = pygame.font.Font(None, font_size)
+            else:
+                target_font = pygame.font.Font(base_path, font_size)
+                target_font.set_bold(is_bold)
+                target_font.set_italic(is_italic)
+
+        loaded_fonts[key] = target_font
+
+    return target_font
+
+
+def to_screen(
+    screen, words, font, font_size, colour, x, y, is_bold=False, is_italic=False
+):
+    if isinstance(words, str):
+        words = [words]
+
+    target_font = get_font(font, font_size, is_bold, is_italic)
+
+    idx = 0
+    line_height = 2
+    height = len(words) * (target_font.get_height() + line_height)
+
+    for word in words:
+        new_y = y + ((target_font.get_height() + line_height // 2) * idx)
+
+        text = target_font.render(word, True, colour)
+        text_rect = text.get_rect()
+        text_rect.center = (x, new_y)
+
+        screen.blit(text, text_rect)
 
         idx += 1
+
+    return {"height": height}
 
 
 async def fadeOutResource(resource):
