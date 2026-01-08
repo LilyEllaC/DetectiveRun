@@ -1,5 +1,6 @@
 import pygame
 import asyncio
+import colorsys
 import os
 
 import const
@@ -26,16 +27,18 @@ def toScreen3(screen, words1, words2, words3, font, colour, x, y):
     toScreen(screen, words2, font, colour, x, y)
     toScreen(screen, words3, font, colour, x, y + font.get_height())
 
-#highScore stuff
-#getting from and pushing to files
+
+# highScore stuff
+# getting from and pushing to files
 def getFromFile(fileName):
-    with open(fileName, 'r') as file:
-        highScore=file.read()
+    with open(fileName, "r") as file:
+        highScore = file.read()
     return highScore
 
-#push name to file
+
+# push name to file
 def pushToFile(score, fileName):
-    with open(fileName, 'w') as file:
+    with open(fileName, "w") as file:
         file.write(str(score))
 
 
@@ -123,6 +126,43 @@ def to_screen(
     return {"height": height}
 
 
+def draw_centered_pair(
+    screen,
+    label_text,
+    value_text,
+    font_name,
+    font_size,
+    label_color,
+    value_color,
+    center_x,
+    center_y,
+    spacing=10,
+    is_bold=False,
+):
+    target_font = get_font(font_name, font_size, is_bold=is_bold)
+
+    label_surf = target_font.render(label_text, True, label_color)
+    value_surf = target_font.render(str(value_text), True, value_color)
+
+    total_width = label_surf.get_width() + spacing + value_surf.get_width()
+    start_x = center_x - (total_width // 2)
+
+    # Use center_y for vertical centering
+    # to_screen uses "center" of rect, but iterates lines.
+    # Here we just assume single line.
+
+    # We want center_y to be the middle of the text height
+    max_height = max(label_surf.get_height(), value_surf.get_height())
+
+    label_rect = label_surf.get_rect(midleft=(start_x, center_y))
+    value_rect = value_surf.get_rect(midleft=(label_rect.right + spacing, center_y))
+
+    screen.blit(label_surf, label_rect)
+    screen.blit(value_surf, value_rect)
+
+    return {"height": max_height}
+
+
 async def fadeOutResource(resource):
     for i in range(255, 0, -5):
         await fade(resource, i)
@@ -174,3 +214,38 @@ async def fade(resource, alpha_value):
     pygame.display.flip()
 
     await asyncio.sleep(0.005)
+
+
+def lerp(color_a, color_b, value_a, value_b):
+    try:
+        val_a = float(value_a)
+        val_b = float(value_b)
+    except ValueError:
+        return color_a
+
+    if val_b == 0:
+        t = 0.0
+    else:
+        t = val_a / val_b
+
+    t = max(0.0, min(1.0, t))
+
+    r1, g1, b1 = [x / 255.0 for x in color_a]
+    r2, g2, b2 = [x / 255.0 for x in color_b]
+
+    h1, s1, v1 = colorsys.rgb_to_hsv(r1, g1, b1)
+    h2, s2, v2 = colorsys.rgb_to_hsv(r2, g2, b2)
+
+    dist = h2 - h1
+    if h1 > h2 and abs(dist) > 0.5:
+        h1 -= 1
+    elif h2 > h1 and abs(dist) > 0.5:
+        h2 -= 1
+
+    h = h1 + (h2 - h1) * t
+    h %= 1.0
+    s = s1 + (s2 - s1) * t
+    v = v1 + (v2 - v1) * t
+
+    r, g, b = colorsys.hsv_to_rgb(h, s, v)
+    return (int(r * 255), int(g * 255), int(b * 255))

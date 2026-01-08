@@ -47,11 +47,13 @@ class PlayingState(GameState):
 
     def on_enter(self, **kwargs):
         print("--- Entering Playing ---")
-        self.reset_game()
+
+        self.reset()
+
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-    def reset_game(self):
+    def reset(self):
         self.velocity = -5 * const.FPS_SCALING
         self.crow = ui.Player(150, 100, 100, 1 * const.FPS_SCALING**2, self.crow_sheet)
 
@@ -105,8 +107,8 @@ class PlayingState(GameState):
                     if not self.question.checkGuess():
                         self.velocity += 0.5
                     else:
-                        self.crow.flying=True
-                        self.velocity/=1.25
+                        self.crow.flying = True
+                        self.velocity /= 1.25
 
     # --- MATH & LOGIC ONLY ---
     def update(self, dt):
