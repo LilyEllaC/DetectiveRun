@@ -107,9 +107,11 @@ class PlayingState(GameState):
                 if self.question.box.is_hovered() and self.question.checkIfNumber():
                     if not self.question.checkGuess():
                         self.velocity += 0.6
+                        self.obstacle1.resetQuestion()
                     else:
                         self.crow.flying = True
                         self.velocity /= 1.25
+                        self.obstacle1.resetQuestion()
 
     # --- MATH & LOGIC ONLY ---
     def update(self, dt):
@@ -149,7 +151,7 @@ class PlayingState(GameState):
 
         # 4. Question Logic
         self.obstacle1.askQuestion(self.question)
-        self.velocity -= 0.002 * const.FPS_SCALING
+        self.velocity -= 0.0025 * const.FPS_SCALING
 
         if self.question.existing:
             self.question_active = True
