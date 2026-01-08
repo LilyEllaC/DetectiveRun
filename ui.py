@@ -13,8 +13,9 @@ OBSTACLE_IMAGES = ["assets/crate.png", "assets/Box.png", "assets/Bomb.png"]
 # Question stuff
 class QuestionImage(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height):
-        self.x = x
-        self.y = y
+        super().__init__()
+        self.x = x-140
+        self.y = y-140
         self.images = OBSTACLE_IMAGES
         self.width = width
         self.height = height
@@ -28,12 +29,9 @@ class QuestionImage(pygame.sprite.Sprite):
         self.rect.y = self.y
 
         # getting the name
-        self.imageName = self.images[self.imageNum][:-4] + "s"
+        self.imageName = self.images[self.imageNum][:-4]
         self.imageName = self.imageName[7:]
 
-    def draw(self):
-        self.rect.x = self.x
-        self.rect.y = self.y
 
 
 class Question:
@@ -42,7 +40,9 @@ class Question:
         self.y = y
         self.width = width
         self.height = height
-        self.image = QuestionImage(x, y + 50, width // 3, height // 3)
+        self.image = QuestionImage(x, y + 50, 50, 50)
+        self.imageGroup=pygame.sprite.Group()
+        self.imageGroup.add(self.image)
         self.box = Button(
             x - width // 2,
             y - height // 2,
@@ -54,6 +54,8 @@ class Question:
             const.GRAY,
             True,
         )
+
+        #dealing with guessing
         self.guess = ""
         self.answerSubmitted = False
         self.correct = True
@@ -64,7 +66,7 @@ class Question:
     def draw(self, screen):
         self.existing = True
         self.box.draw(screen)
-        self.image.draw()
+        self.imageGroup.draw(screen)
         utility.toScreen(
             screen, self.guess, const.FONT30, const.BLUE, self.x, self.y - 50
         )

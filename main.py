@@ -20,7 +20,6 @@ class GameStates(Enum):
     END = 3
     HELP = 4
 
-
 """
 # async def handle_events(state):
 #     for event in pygame.event.get():
