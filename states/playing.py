@@ -79,6 +79,7 @@ class PlayingState(GameState):
 
         ui.obstacleImages = ["assets/crate.png", "assets/Box.png", "assets/Bomb.png"]
         self.question = ui.Question(const.WIDTH // 2, const.HEIGHT // 2, 300, 200)
+        self.question_active = False
 
     async def handle_events(self, events):
         for event in events:
@@ -151,9 +152,14 @@ class PlayingState(GameState):
         self.velocity -= 0.002 * const.FPS_SCALING
 
         if self.question.existing:
+            self.question_active = True
             if self.question.time == 0 + 1 / const.FPS:
                 self.question.correct = False
                 self.velocity += 0.75
+        elif self.question_active:
+            # Question just finished
+            self.question_active = False
+            self.obstacle1.resetQuestion()
 
         # 5. Collision (Death) Logic
         # Note: You need a hasCollided method on your Player class!
