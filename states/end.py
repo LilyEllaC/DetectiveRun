@@ -141,29 +141,29 @@ class EndState(GameState):
 
         text_base_y += 24
 
-        if fs>int(utils.getFromFile("highScore.txt")):
-            utils.pushToFile(fs, "highScore.txt")
-            self.newHighScore=True
+        if fs > int(utils.getFromFile("highScore.txt")):
+	        utils.pushToFile(fs, "highScore.txt")
+	        self.newHighScore = True
 
         if self.newHighScore:
-            text_base_y += utils.to_screen(
-                screen,
-                "New High Score!",
-                self.font,
-                24,
-                const.GREEN,
-                const.WIDTH // 2,
-                text_base_y,
-                )["height"]
+	        text_base_y += utils.to_screen(
+		        screen,
+		        "New High Score!",
+		        self.font,
+		        24,
+		        const.GREEN,
+		        const.WIDTH // 2,
+		        text_base_y,
+	        )["height"]
 
-            text_base_y += 8
+	        text_base_y += 8
 
-            text_base_y += utils.to_screen(
-                screen,
-                f"High Score: {utils.getFromFile("highScore.txt")}",
-                self.font,
-                24,
-                const.GREEN,
+	        text_base_y += utils.to_screen(
+		        screen,
+		        f"High Score: {utils.getFromFile("highScore.txt")}",
+		        self.font,
+		        24,
+		        const.GREEN,
                 const.WIDTH // 2,
                 text_base_y,
                 )["height"]
