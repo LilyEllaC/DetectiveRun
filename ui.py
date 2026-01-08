@@ -241,36 +241,8 @@ class Player(pygame.sprite.Sprite):
 
     def jump(self):
         if self.jumpPressed:
-            # 1. Update Physics (Velocity & Position)
-            self.yVelocity += self.gravity + self.faster
-            self.y += self.yVelocity
-
-            # 2. Check Collision with Floor
-            # The resting position is (floor - height - 5).
-            # If we are at or below this point, we have landed.
-            landing_y = self.floor - self.height - 5
-
-            if self.y >= landing_y:
-                # --- LANDED ---
-                self.y = landing_y
-                self.yVelocity = 0
-                self.jumpPressed = False
-
-                # Landing/Running Animation (frames 32-41)
-                self.image = self.crow_sheet.get_image()
-                current_time = pygame.time.get_ticks()
-                if (
-                    current_time - self.crow_sheet.last_update
-                    >= self.crow_sheet.animation_cooldown
-                ):
-                    self.crow_sheet.last_update = current_time
-                    if self.crow_sheet.frame < 32 or self.crow_sheet.frame >= 41:
-                        self.crow_sheet.frame = 32
-                    else:
-                        self.crow_sheet.frame += 1
-            else:
-                # --- IN AIR ---
-                # Jump Animation (frames 48-57)
+            if self.y < self.floor - self.height:
+                self.yVelocity += self.gravity + self.faster
                 self.image = self.crow_sheet.get_image()
                 current_time = pygame.time.get_ticks()
                 if (
@@ -282,10 +254,25 @@ class Player(pygame.sprite.Sprite):
                         self.crow_sheet.frame = 48
                     else:
                         self.crow_sheet.frame += 1
-
+            else:
+                self.yVelocity = 0
+                self.y = self.floor - self.height - 5
+                self.image = self.crow_sheet.get_image()
+                current_time = pygame.time.get_ticks()
+                if (
+                    current_time - self.crow_sheet.last_update
+                    >= self.crow_sheet.animation_cooldown
+                ):
+                    self.crow_sheet.last_update = current_time
+                    if self.crow_sheet.frame < 32 or self.crow_sheet.frame >= 41:
+                        self.crow_sheet.frame = 32
+                    else:
+                        self.crow_sheet.frame += 1
+                self.jumpPressed = False
+            self.y += self.yVelocity
             self.image = pygame.transform.scale(self.image, (self.width, self.height))
 
-    def move(self, question, velocity):
+    def move(self, question):
         self.rect.x = self.x
         self.rect.y = self.y
         # ... (Same logic as before) ...
@@ -302,7 +289,7 @@ class Player(pygame.sprite.Sprite):
                 self.crow_sheet.frame += 1
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         if not question.existing:
-            self.points += abs(velocity) * 0.025
+            self.points += 0.1
 
     def hasCollided(self, obstacles):
         for obstacle in obstacles:
