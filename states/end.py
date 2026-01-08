@@ -26,7 +26,15 @@ class EndState(GameState):
         )
 
         self.restart_button = ui.Button(
-            const.WIDTH // 2 - 224, const.HEIGHT - 120, 224 * 2, 21 * 2, "", const.FONT40, (0, 0, 0, 0), (0, 0, 0, 0), False
+            const.WIDTH // 2 - 224,
+            const.HEIGHT - 120,
+            224 * 2,
+            21 * 2,
+            "",
+            const.FONT40,
+            (0, 0, 0, 0),
+            (0, 0, 0, 0),
+            False,
         )
 
     def on_enter(self, **kwargs):
@@ -73,14 +81,14 @@ class EndState(GameState):
         elif fs > 50:
             text = "You are getting closer, but he still got away"
         elif fs > 20:
-            text = "The murderer just walked out of the door in front of you"          
+            text = "The murderer just walked out of the door in front of you"
         elif fs > 10:
-            text = "You can't find the murderer even with him being on of 2 people in the room"
+            text = "You can't find the murderer even with him being one of 2 people in the room"
         elif fs > 0:
-            text = "The murderer escaped you before you even knew who he was" 
+            text = "The murderer escaped you before you even knew who he was"
         else:
             text = "The murderer caught you"
-        
+
         utility.toScreen(
             screen,
             text,
@@ -91,7 +99,12 @@ class EndState(GameState):
         )
 
         endBtnImg = pygame.image.load("assets/EndBtn.png")
-        endBtnImg = pygame.transform.scale(endBtnImg, (endBtnImg.get_width() * 2, endBtnImg.get_height() * 2))
-        screen.blit(endBtnImg, (const.WIDTH // 2 - endBtnImg.get_width() // 2, const.HEIGHT - 120))
+        endBtnImg = pygame.transform.scale(
+            endBtnImg, (endBtnImg.get_width() * 2, endBtnImg.get_height() * 2)
+        )
+        screen.blit(
+            endBtnImg,
+            (const.WIDTH // 2 - endBtnImg.get_width() // 2, const.HEIGHT - 120),
+        )
 
         self.restart_button.draw(screen)

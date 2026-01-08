@@ -14,8 +14,8 @@ obstacleImages = ["assets/crate.png", "assets/Box.png", "assets/Bomb.png"]
 class QuestionImage(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height):
         super().__init__()
-        self.x = x-140
-        self.y = y-140
+        self.x = x - 140
+        self.y = y - 140
         self.images = obstacleImages
         self.width = width
         self.height = height
@@ -33,7 +33,6 @@ class QuestionImage(pygame.sprite.Sprite):
         self.imageName = self.imageName[7:]
 
 
-
 class Question:
     def __init__(self, x, y, width, height):
         self.x = x
@@ -41,7 +40,7 @@ class Question:
         self.width = width
         self.height = height
         self.image = QuestionImage(x, y + 50, 50, 50)
-        self.imageGroup=pygame.sprite.Group()
+        self.imageGroup = pygame.sprite.Group()
         self.imageGroup.add(self.image)
         self.box = Button(
             x - width // 2,
@@ -55,7 +54,7 @@ class Question:
             True,
         )
 
-        #dealing with guessing
+        # dealing with guessing
         self.guess = ""
         self.answerSubmitted = False
         self.correct = True
@@ -228,27 +227,26 @@ class Player(pygame.sprite.Sprite):
         self.y = self.floor - self.height - 5
 
         self.flying = False
-        self.flyingTimer=0
+        self.flyingTimer = 0
 
     def jump(self):
-        # ... (Same logic as before) ...
         if self.jumpPressed:
-            if self.y < self.floor - self.height:
-                self.yVelocity += self.gravity + self.faster
-                self.image = self.crow_sheet.get_image()
-                current_time = pygame.time.get_ticks()
-                if (
-                    current_time - self.crow_sheet.last_update
-                    >= self.crow_sheet.animation_cooldown
-                ):
-                    self.crow_sheet.last_update = current_time
-                    if self.crow_sheet.frame < 48 or self.crow_sheet.frame >= 57:
-                        self.crow_sheet.frame = 48
-                    else:
-                        self.crow_sheet.frame += 1
-            else:
+            # 1. Update Physics (Velocity & Position)
+            self.yVelocity += self.gravity + self.faster
+            self.y += self.yVelocity
+
+            # 2. Check Collision with Floor
+            # The resting position is (floor - height - 5).
+            # If we are at or below this point, we have landed.
+            landing_y = self.floor - self.height - 5
+
+            if self.y >= landing_y:
+                # --- LANDED ---
+                self.y = landing_y
                 self.yVelocity = 0
-                self.y = self.floor - self.height - 5
+                self.jumpPressed = False
+
+                # Landing/Running Animation (frames 32-41)
                 self.image = self.crow_sheet.get_image()
                 current_time = pygame.time.get_ticks()
                 if (
@@ -260,8 +258,21 @@ class Player(pygame.sprite.Sprite):
                         self.crow_sheet.frame = 32
                     else:
                         self.crow_sheet.frame += 1
-                self.jumpPressed = False
-            self.y += self.yVelocity
+            else:
+                # --- IN AIR ---
+                # Jump Animation (frames 48-57)
+                self.image = self.crow_sheet.get_image()
+                current_time = pygame.time.get_ticks()
+                if (
+                    current_time - self.crow_sheet.last_update
+                    >= self.crow_sheet.animation_cooldown
+                ):
+                    self.crow_sheet.last_update = current_time
+                    if self.crow_sheet.frame < 48 or self.crow_sheet.frame >= 57:
+                        self.crow_sheet.frame = 48
+                    else:
+                        self.crow_sheet.frame += 1
+
             self.image = pygame.transform.scale(self.image, (self.width, self.height))
 
     def move(self, question):
@@ -302,9 +313,9 @@ class Player(pygame.sprite.Sprite):
 
     def stopFlying(self):
         if self.flying:
-            self.flyingTimer+=1/const.FPS
-        if self.flying and self.flyingTimer>5:
-            self.flying=False
+            self.flyingTimer += 1 / const.FPS
+        if self.flying and self.flyingTimer > 5:
+            self.flying = False
 
 
 class Button:
